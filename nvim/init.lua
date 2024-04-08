@@ -369,18 +369,18 @@ require('lazy').setup({
         -- },
         defaults = {
           -- initial_mode = 'normal',
-          -- mappings = {
-          --   i = {
-          --     ['<esc>'] = require('telescope.actions').close,
-          --     ['<C-j>'] = require('telescope.actions').move_selection_next,
-          --     ['<C-k>'] = require('telescope.actions').move_selection_previous,
-          --   },
-          --   n = {
-          --     ['<esc>'] = require('telescope.actions').close,
-          --     ['<C-j>'] = require('telescope.actions').move_selection_next,
-          --     ['<C-k>'] = require('telescope.actions').move_selection_previous,
-          --   },
-          -- },
+          mappings = {
+            i = {
+              ['<esc>'] = require('telescope.actions').close,
+              ['<C-j>'] = require('telescope.actions').move_selection_next,
+              ['<C-k>'] = require('telescope.actions').move_selection_previous,
+            },
+            n = {
+              ['<esc>'] = require('telescope.actions').close,
+              ['<C-j>'] = require('telescope.actions').move_selection_next,
+              ['<C-k>'] = require('telescope.actions').move_selection_previous,
+            },
+          },
         },
         pickers = {
           oldfiles = {
@@ -578,6 +578,38 @@ require('lazy').setup({
       --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+      --
+
+      -- https://gist.github.com/folke/fe5d28423ea5380929c3f7ce674c41d8
+      local library = {}
+      local path = vim.split(package.path, ';')
+
+      -- this is the ONLY correct way to setup your path
+      table.insert(path, 'lua/?.lua')
+      table.insert(path, 'lua/?/init.lua')
+
+      local function add(lib)
+        for _, p in pairs(vim.fn.expand(lib, false, true)) do
+          p = vim.loop.fs_realpath(p)
+          print(p)
+          library[p] = true
+        end
+      end
+
+      -- add runtime
+      add '$VIMRUNTIME'
+
+      -- add your config
+      add '~/.config/nvim'
+
+      -- add plugins
+      -- if you're not using packer, then you might need to change the paths below
+      -- add '~/.local/share/nvim/site/pack/packer/opt/*'
+      -- add '~/.local/share/nvim/site/pack/packer/start/*'
+      add '~/.local/share/nvim/lazy/*'
+
+      print 'Setting up'
+
       local servers = {
         -- clangd = {},
         -- gopls = {},
@@ -600,6 +632,30 @@ require('lazy').setup({
             Lua = {
               completion = {
                 callSnippet = 'Replace',
+              },
+              runtime = {
+                version = 'LuaJIT',
+                path = path,
+                -- path = {},
+              },
+              codeLens = {
+                enable = true,
+              },
+              workspace = {
+                -- Make the server aware of Neovim runtime files
+                -- library = vim.api.nvim_get_runtime_file('', true),
+                -- library = '~/.local/share/nvim/lazy',
+                -- checkThirdParty = false,
+                -- library = library,
+                library = {
+                  vim.api.nvim_get_runtime_file('', true),
+                  -- '/Users/maxtaylor/.local/share/nvim/lazy',
+                  '/Users/maxtaylor/.local/share/nvim/lazy/plenary.nvim/lua/plenary',
+                },
+
+                -- [vim.fn.expand '$VIMRUNTIME/lua'] = true,
+                -- -- Add the path to plenary.nvim here. Ensure the path is correctly expanded:
+                -- [vim.fn.expand '~/.local/share/nvim/lazy/plenary.nvim'] = true,
               },
               -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
               -- diagnostics = { disable = { 'missing-fields' } },
