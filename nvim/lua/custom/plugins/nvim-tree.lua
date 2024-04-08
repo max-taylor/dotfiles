@@ -11,7 +11,7 @@ return {
         view = {
           relativenumber = true,
           number = true,
-          width = 40,
+          width = 60,
         },
       }
     end,
