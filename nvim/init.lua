@@ -603,12 +603,7 @@ require('lazy').setup({
       add '~/.config/nvim'
 
       -- add plugins
-      -- if you're not using packer, then you might need to change the paths below
-      -- add '~/.local/share/nvim/site/pack/packer/opt/*'
-      -- add '~/.local/share/nvim/site/pack/packer/start/*'
       add '~/.local/share/nvim/lazy/*'
-
-      print 'Setting up'
 
       local servers = {
         -- clangd = {},
@@ -643,14 +638,11 @@ require('lazy').setup({
               },
               workspace = {
                 -- Make the server aware of Neovim runtime files
-                -- library = vim.api.nvim_get_runtime_file('', true),
-                -- library = '~/.local/share/nvim/lazy',
-                -- checkThirdParty = false,
-                -- library = library,
                 library = {
                   vim.api.nvim_get_runtime_file('', true),
                   -- '/Users/maxtaylor/.local/share/nvim/lazy',
                   '/Users/maxtaylor/.local/share/nvim/lazy/plenary.nvim/lua/plenary',
+                  '/Users/maxtaylor/.local/share/nvim/lazy/telescope.nvim/lua/telescope',
                 },
 
                 -- [vim.fn.expand '$VIMRUNTIME/lua'] = true,
