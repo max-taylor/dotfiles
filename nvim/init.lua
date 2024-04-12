@@ -368,6 +368,7 @@ require('lazy').setup({
         --   },
         -- },
         defaults = {
+          cwd_only = true,
           -- initial_mode = 'normal',
           mappings = {
             i = {
@@ -384,12 +385,10 @@ require('lazy').setup({
         },
         pickers = {
           oldfiles = {
-            cwd_only = true,
-            theme = 'dropdown',
-            initial_mode = 'normal',
+            -- theme = 'dropdown',
           },
           find_files = {
-            theme = 'dropdown',
+            -- theme = 'dropdown',
           },
         },
         extensions = {
@@ -580,31 +579,6 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       --
 
-      -- https://gist.github.com/folke/fe5d28423ea5380929c3f7ce674c41d8
-      local library = {}
-      local path = vim.split(package.path, ';')
-
-      -- this is the ONLY correct way to setup your path
-      table.insert(path, 'lua/?.lua')
-      table.insert(path, 'lua/?/init.lua')
-
-      local function add(lib)
-        for _, p in pairs(vim.fn.expand(lib, false, true)) do
-          p = vim.loop.fs_realpath(p)
-          print(p)
-          library[p] = true
-        end
-      end
-
-      -- add runtime
-      add '$VIMRUNTIME'
-
-      -- add your config
-      add '~/.config/nvim'
-
-      -- add plugins
-      add '~/.local/share/nvim/lazy/*'
-
       local servers = {
         -- clangd = {},
         -- gopls = {},
@@ -630,7 +604,7 @@ require('lazy').setup({
               },
               runtime = {
                 version = 'LuaJIT',
-                path = path,
+                -- path = path,
                 -- path = {},
               },
               codeLens = {
@@ -641,6 +615,7 @@ require('lazy').setup({
                 library = {
                   vim.api.nvim_get_runtime_file('', true),
                   -- '/Users/maxtaylor/.local/share/nvim/lazy',
+                  -- TODO: Update this to calculate the base path
                   '/Users/maxtaylor/.local/share/nvim/lazy/plenary.nvim/lua/plenary',
                   '/Users/maxtaylor/.local/share/nvim/lazy/telescope.nvim/lua/telescope',
                 },
@@ -772,9 +747,9 @@ require('lazy').setup({
         -- No, but seriously. Please read `:help ins-completion`, it is really good!
         mapping = cmp.mapping.preset.insert {
           -- Select the [n]ext item
-          ['<C-n>'] = cmp.mapping.select_next_item(),
+          ['<C-j>'] = cmp.mapping.select_next_item(),
           -- Select the [p]revious item
-          ['<C-p>'] = cmp.mapping.select_prev_item(),
+          ['<C-k>'] = cmp.mapping.select_prev_item(),
           -- Select the [s]elect item
           ['<Tab>'] = cmp.mapping.confirm {
             behavior = cmp.ConfirmBehavior.Insert,

@@ -19,4 +19,11 @@ vim.keymap.set('n', '<C-q>', '<C-w>q')
 -- vim.keymap.set('i', '<C-q>', '<C-w>q')
 --
 
+-- vim.keymap.set('n', '<C-q>', '<C-a>o', { noremap = true })
+-- vim.keymap.set('n', '<C-f>', '<cmd>!tmux send-keys C-a o<CR>', { noremap = true, silent = true })
+-- vim.keymap.set('n', '<C-f>', '<C-a>o', { noremap = true, silent = true })
+-- vim.keymap.set('n', '<C-f>', function()
+--   vim.cmd 'silent !tmux send-keys C-a o'
+-- end, { noremap = true, silent = true })
+
 return {}

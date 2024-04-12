@@ -8,6 +8,10 @@ return {
       -- Only one of these is needed, not both.
       'nvim-telescope/telescope.nvim', -- optional
     },
-    config = true,
+    config = function()
+      vim.keymap.set('n', '<leader>n', ':Neogit<CR>', { silent = true })
+
+      require('neogit').setup {}
+    end,
   },
 }
