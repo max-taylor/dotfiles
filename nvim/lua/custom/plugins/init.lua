@@ -1,18 +1,6 @@
 -- Custom plugins configuration
 
 return {
-  -- require 'custom.plugins.noice',
-  -- require 'custom.plugins.wrapping',
-  require 'custom.plugins.nvim-tree',
-  require 'custom.plugins.toggle-term',
-  require 'custom.plugins.leap',
-  require 'custom.plugins.copilot',
-  require 'custom.plugins.neogit',
-  require 'custom.plugins.neoscroll',
-  require 'custom.plugins.harpoon',
-  require 'custom.plugins.lualine',
-  require 'custom.plugins.goto-preview',
-  require 'custom.plugins.obsidian',
   -- Ordering is important here so that this color scheme is loaded last, noice.nvim overrides the color scheme to default
   {
     'rebelot/kanagawa.nvim',
