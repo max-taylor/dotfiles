@@ -1,11 +1,8 @@
 return {
   {
-    'nvim-lua/plenary.nvim',
-  },
-  { 'MunifTanjim/nui.nvim' },
-  {
     dir = '~/Documents/Code/Neovim/plugin/',
     name = 'task-manager',
+    dependencies = { 'MunifTanjim/nui.nvim', 'kikito/middleclass' },
     config = function()
       require('task-manager').setup()
     end,
