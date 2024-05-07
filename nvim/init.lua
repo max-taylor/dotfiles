@@ -525,7 +525,7 @@ require("lazy").setup({
 									"/Users/maxtaylor/.local/share/nvim/lazy/nui.nvim/lua/nui",
 									"/Users/maxtaylor/.local/share/nvim/lazy/plenary.nvim/lua/plenary",
 									"/Users/maxtaylor/.local/share/nvim/lazy/telescope.nvim/lua/telescope",
-									"/Users/maxtaylor/.local/share/nvim/lazy/middleclass/middleclass.lua",
+									"/Users/maxtaylor/.local/share/nvim/lazy/middleclass",
 								},
 
 								-- [vim.fn.expand '$VIMRUNTIME/lua'] = true,

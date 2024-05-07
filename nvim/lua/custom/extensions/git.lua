@@ -19,11 +19,15 @@ local function runCommandSeparate(command)
 	local full_command = string.format("%s >%s 2>%s", command, stdout_temp, stderr_temp)
 	local success = os.execute(full_command)
 
+	if not success then
+		return "", "failed to run command"
+	end
+
 	-- Read the output from stdout
 	local stdout_file = io.open(stdout_temp, "r")
 
 	if not stdout_file then
-		return false, "", "failed to open stdout file"
+		return "", "failed to open stdout file"
 	end
 
 	local output = stdout_file:read("*all")
@@ -35,14 +39,14 @@ local function runCommandSeparate(command)
 	local stderr_file = io.open(stderr_temp, "r")
 
 	if not stderr_file then
-		return false, "", "failed to open stderr file"
+		return "", "failed to open stderr file"
 	end
 
 	local err = stderr_file:read("*all")
 	stderr_file:close()
 	os.remove(stderr_temp) -- Clean up the temporary file
 
-	return success, output, err
+	return output, err
 end
 
 -- Function to run a command and capture its output, error and exit status
@@ -87,9 +91,8 @@ local commitMessageInput = Input({
 		os.execute("git add .")
 
 		-- TODO: refactor success out and just put all errors in stdout_output
-		local success, output, err = runCommandSeparate('git commit -m "' .. value .. '"')
+		local output, err = runCommandSeparate('git commit -m "' .. value .. '"')
 
-		print("Success: " .. tostring(success))
 		print("Output: " .. output)
 		print("Error: " .. err)
 		print(type(err))
