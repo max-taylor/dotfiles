@@ -1,17 +1,17 @@
 return {
-  {
-    'NeogitOrg/neogit',
-    dependencies = {
-      'nvim-lua/plenary.nvim', -- required
-      'sindrets/diffview.nvim', -- optional - Diff integration
+	{
+		"NeogitOrg/neogit",
+		dependencies = {
+			"nvim-lua/plenary.nvim", -- required
+			"sindrets/diffview.nvim", -- optional - Diff integration
 
-      -- Only one of these is needed, not both.
-      'nvim-telescope/telescope.nvim', -- optional
-    },
-    config = function()
-      vim.keymap.set('n', '<leader>n', ':Neogit<CR>', { silent = true })
+			-- Only one of these is needed, not both.
+			"nvim-telescope/telescope.nvim", -- optional
+		},
+		config = function()
+			vim.keymap.set("n", "<leader>n", ":Neogit<CR>", { silent = true })
 
-      require('neogit').setup {}
-    end,
-  },
+			require("neogit").setup({})
+		end,
+	},
 }
