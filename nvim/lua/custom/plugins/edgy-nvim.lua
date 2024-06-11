@@ -74,6 +74,17 @@ return {
 					open = "Trouble symbols position=left focus=false filter.buf=0",
 					size = { height = 0.6 },
 				},
+				-- Show current files marks
+				-- {
+				-- 	ft = "vim",
+				-- 	pinned = true,
+				-- 	title = "Marks",
+				-- 	filter = function(buf)
+				-- 		return vim.fn.getbufvar(buf, "&buftype") == ""
+				-- 	end,
+				-- 	open = "marks",
+				-- 	size = { height = 0.4 },
+				-- },
 			},
 		},
 	},
