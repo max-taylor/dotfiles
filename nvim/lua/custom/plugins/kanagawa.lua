@@ -1,5 +1,3 @@
--- Custom plugins configuration
-
 return {
 	-- Ordering is important here so that this color scheme is loaded last, noice.nvim overrides the color scheme to default
 	{

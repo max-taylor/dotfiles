@@ -74,6 +74,14 @@ return {
 					open = "Trouble symbols position=left focus=false filter.buf=0",
 					size = { height = 0.6 },
 				},
+				-- {
+				-- 	ft = "markdown",
+				-- 	title = "Old files",
+				-- 	pinned = true,
+				-- 	filter = function(buf)
+				-- 		return vim.fn.getbufvar(buf, "&buftype") == ""
+				-- 	end,
+				-- },
 				-- Show current files marks
 				-- {
 				-- 	ft = "vim",

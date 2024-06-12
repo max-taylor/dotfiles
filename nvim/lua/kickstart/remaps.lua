@@ -1,7 +1,7 @@
-vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
+vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
 -- exit terminal mode in the builtin terminal with a shortcut
-vim.keymap.set('t', '<esc><esc>', '<c-\\><c-n>', { desc = 'exit terminal mode' })
+vim.keymap.set("t", "<esc><esc>", "<c-\\><c-n>", { desc = "exit terminal mode" })
 
 -- keybinds to make split navigation easier.
 --  use ctrl+<hjkl> to switch between windows
@@ -13,18 +13,18 @@ vim.keymap.set('t', '<esc><esc>', '<c-\\><c-n>', { desc = 'exit terminal mode' }
 -- vim.keymap.set('n', '<c-k>', '<c-w><c-k>', { desc = 'move focus to the upper window' })
 --
 local function navigate_wrap(direction)
-  -- Get the current window's ID
-  local cur_win = vim.api.nvim_get_current_win()
+	-- Get the current window's ID
+	local cur_win = vim.api.nvim_get_current_win()
 
-  -- Try moving in the specified direction
-  vim.cmd('wincmd ' .. direction)
+	-- Try moving in the specified direction
+	vim.cmd("wincmd " .. direction)
 
-  -- If the current window hasn't changed, we're at the edge and need to wrap
-  if cur_win == vim.api.nvim_get_current_win() then
-    -- Move to the farthest window in the opposite direction
-    local opposite_directions = { h = 'l', j = 'k', k = 'j', l = 'h' }
-    vim.cmd('wincmd ' .. opposite_directions[direction])
-  end
+	-- If the current window hasn't changed, we're at the edge and need to wrap
+	if cur_win == vim.api.nvim_get_current_win() then
+		-- Move to the farthest window in the opposite direction
+		local opposite_directions = { h = "l", j = "k", k = "j", l = "h" }
+		vim.cmd("wincmd " .. opposite_directions[direction])
+	end
 end
 
 -- local function navigate_wrap(direction)
@@ -62,15 +62,33 @@ end
 -- end
 
 -- Set up the keybindings with the custom navigation function
-vim.keymap.set('n', '<C-h>', function()
-  navigate_wrap 'h'
-end, { desc = 'Move focus to the left window (wrap)' })
-vim.keymap.set('n', '<C-l>', function()
-  navigate_wrap 'l'
-end, { desc = 'Move focus to the right window (wrap)' })
-vim.keymap.set('n', '<C-j>', function()
-  navigate_wrap 'j'
-end, { desc = 'Move focus to the lower window (wrap)' })
-vim.keymap.set('n', '<C-k>', function()
-  navigate_wrap 'k'
-end, { desc = 'Move focus to the upper window (wrap)' })
+vim.keymap.set("n", "<C-h>", function()
+	navigate_wrap("h")
+end, { desc = "Move focus to the left window (wrap)" })
+vim.keymap.set("n", "<C-l>", function()
+	navigate_wrap("l")
+end, { desc = "Move focus to the right window (wrap)" })
+vim.keymap.set("n", "<C-j>", function()
+	navigate_wrap("j")
+end, { desc = "Move focus to the lower window (wrap)" })
+vim.keymap.set("n", "<C-k>", function()
+	navigate_wrap("k")
+end, { desc = "Move focus to the upper window (wrap)" })
+
+-- Rebind <Tab> in insert mode to accept copilot suggestions if available
+vim.keymap.set("i", "<C-l>", function()
+	if require("copilot.suggestion").is_visible() then
+		require("copilot.suggestion").accept()
+	end
+end, {
+	silent = true,
+})
+
+-- Rebind save to <C-s> in normal and insert mode
+vim.keymap.set("n", "<C-s>", ":update<cr>")
+-- <C-o> exits insert mode temporarily to execute a single normal mode command in this case saving
+-- Also exiting insert mode here
+vim.keymap.set("i", "<C-s>", "<C-O>:update<cr><Esc>")
+
+-- Rebind quit window to <C-q>
+vim.keymap.set("n", "<C-q>", "<C-w>q")
