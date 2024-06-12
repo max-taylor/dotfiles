@@ -2,7 +2,7 @@ return {
 	{
 		"MunifTanjim/nui.nvim",
 		config = function()
-			require("custom.extensions.git").setup()
+			require("extensions.git").setup()
 		end,
 	},
 	{

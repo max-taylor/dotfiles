@@ -1,9 +1,7 @@
-require("kickstart.settings")
-require("kickstart.remaps")
+require("config")
 
 require("lazy").setup({
-	{ import = "kickstart.plugins" },
-	{ import = "custom.plugins" },
+	{ import = "plugins" },
 }, {
 	ui = {
 		-- If you are using a Nerd Font: set icons to an empty table which will use the
