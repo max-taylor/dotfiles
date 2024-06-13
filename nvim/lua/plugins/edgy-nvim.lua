@@ -1,3 +1,20 @@
+local function print_open_windows()
+	-- Get the list of currently open windows
+	local windows = vim.api.nvim_list_wins()
+
+	-- Iterate over the list of windows
+	for _, win in ipairs(windows) do
+		-- Get the buffer associated with the window
+		local buf = vim.api.nvim_win_get_buf(win)
+		-- Get the name of the buffer
+		local buf_name = vim.api.nvim_buf_get_name(buf)
+		-- Get the window number
+		local win_number = vim.fn.win_id2win(win)
+		-- Print the window number and buffer name
+		print(string.format("Window %d: %s", win_number, buf_name))
+	end
+end
+
 local function is_within_cwd(filepath)
 	-- Get the current working directory
 	local cwd = vim.fn.getcwd()
@@ -7,18 +24,34 @@ local function is_within_cwd(filepath)
 	return string.sub(normalized_path, 1, #cwd) == cwd
 end
 
+local function get_buffer()
+	-- Get all current buffers
+	local buffers = vim.api.nvim_list_bufs()
+
+	-- Iterate over each buffer and check its file type
+	for _, buf in ipairs(buffers) do
+		if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].filetype == "oldfiles" then
+			return buf -- Return the buffer number if file type is 'oldfiles'
+		end
+	end
+
+	vim.api.nvim_command("enew") -- Open a new empty buffer
+	return vim.api.nvim_get_current_buf()
+end
+
 local function oldfilesOpen()
 	-- Function to open the old files list
 	-- local bufnr = vim.api.nvim_create_buf(false, true) -- Create a new buffer
-	vim.api.nvim_command("enew") -- Open a new empty buffer
-	local bufnr = vim.api.nvim_get_current_buf()
+	local bufnr = get_buffer()
+	print("found", bufnr)
+	vim.api.nvim_set_current_buf(bufnr)
+
 	local oldfiles = vim.v.oldfiles
 	local results = {}
 
 	for _, file in ipairs(oldfiles) do
 		if is_within_cwd(file) then
 			table.insert(results, file)
-			vim.api.nvim_buf_set_lines(bufnr, -1, -1, false, { file })
 		end
 
 		if #results == 5 then
@@ -26,11 +59,12 @@ local function oldfilesOpen()
 		end
 	end
 
+	vim.api.nvim_buf_set_lines(bufnr, 0, 0, false, results)
+
 	-- Set the buffer's file type to 'oldfiles' (for consistency)
 	vim.bo[bufnr].filetype = "oldfiles"
 	vim.bo[bufnr].buftype = "nofile"
 	vim.bo[bufnr].swapfile = false
-	vim.bo[bufnr].modifiable = false
 	-- Add keybinding on enter to open the hovered file
 	vim.keymap.set("n", "<CR>", function()
 		local columnPosition = vim.api.nvim_win_get_cursor(0)[1]
