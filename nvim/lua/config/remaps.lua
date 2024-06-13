@@ -84,6 +84,7 @@ end, {
 	silent = true,
 })
 
+-- Modify save keybinds
 -- Rebind save to <C-s> in normal and insert mode
 vim.keymap.set("n", "<C-s>", ":update<cr>")
 -- <C-o> exits insert mode temporarily to execute a single normal mode command in this case saving
