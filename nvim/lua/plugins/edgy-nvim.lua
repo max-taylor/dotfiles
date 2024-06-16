@@ -89,46 +89,8 @@ return {
 			vim.keymap.set("n", "<leader>u", function()
 				edgy.toggle("left")
 			end, { desc = "Toggle sidebar" })
-
-			vim.keymap.set("n", "<leader>ut", function()
-				for _, file in ipairs(vim.v.oldfiles) do
-					print(file)
-				end
-			end, { desc = "Toggle sidebar" })
 		end,
-		dependencies = {
-			{
-				"folke/trouble.nvim",
-				keys = {
-					{
-						"<leader>ud",
-						"<cmd>Trouble diagnostics toggle<cr>",
-						desc = "Diagnostics (Trouble)",
-					},
-					{
-						"<leader>us",
-						"<cmd>Trouble symbols toggle<cr>",
-						desc = "Symbols (Trouble)",
-					},
-					-- {
-					-- 	"<leader>tl",
-					-- 	"<cmd>Trouble loclist toggle<cr>",
-					-- 	desc = "Location List (Trouble)",
-					-- },
-				},
-				opts = {
-					open_no_results = true,
-				},
-				init = function()
-					vim.api.nvim_create_autocmd("BufReadPost", {
-						pattern = "*",
-						callback = function()
-							require("trouble").refresh()
-						end,
-					})
-				end,
-			},
-		},
+		dependencies = { "folke/trouble.nvim" },
 		opts = {
 			options = {
 				left = {
@@ -141,32 +103,42 @@ return {
 			close_when_all_hidden = false,
 			left = {
 				{
-					ft = "oldfiles",
-					title = "Old Files",
-					size = { height = 0.4 },
-					pinned = true, -- Keep the view always shown in the edgebar
-					open = oldfilesOpen,
-					-- wo = {
-					-- 	-- Window-specific options
-					-- 	number = false, -- Disable line numbers
-					-- 	relativenumber = false, -- Disable relative line numbers
-					-- 	cursorline = true, -- Highlight the current line
-					-- },
-					filter = function(buf, win)
-						return vim.bo[buf].filetype == "oldfiles"
-					end,
-				},
-				-- { ft = "qf", title = "QuickFix" },
-				{
 					ft = "trouble",
 					pinned = true,
-					title = "Troubles",
+					title = "Trouble qflist",
 					filter = function(_buf, win)
-						return vim.w[win].trouble.mode == "loclist"
+						return vim.w[win].trouble.mode == "qflist"
 					end,
-					open = "Trouble loclist focus=false filter.severity=vim.diagnostic.severity.ERROR",
+					open = "Trouble qflist focus=false filter.severity=vim.diagnostic.severity.ERROR",
 					size = { height = 0.4 },
 				},
+				-- {
+				-- 	ft = "trouble",
+				-- 	pinned = true,
+				-- 	title = "Troubles",
+				-- 	filter = function(_buf, win)
+				-- 		return vim.w[win].trouble.mode == "loclist"
+				-- 	end,
+				-- 	open = "Trouble loclist focus=false filter.severity=vim.diagnostic.severity.ERROR",
+				-- 	size = { height = 0.4 },
+				-- },
+				-- {
+				-- 	ft = "oldfiles",
+				-- 	title = "Old Files",
+				-- 	size = { height = 0.4 },
+				-- 	pinned = true, -- Keep the view always shown in the edgebar
+				-- 	open = oldfilesOpen,
+				-- 	-- wo = {
+				-- 	-- 	-- Window-specific options
+				-- 	-- 	number = false, -- Disable line numbers
+				-- 	-- 	relativenumber = false, -- Disable relative line numbers
+				-- 	-- 	cursorline = true, -- Highlight the current line
+				-- 	-- },
+				-- 	filter = function(buf, win)
+				-- 		return vim.bo[buf].filetype == "oldfiles"
+				-- 	end,
+				-- },
+				-- { ft = "loclist", title = "Loclist" },
 				-- { ft = "help", pinned = true, title = "Location List", size = { height = 0.4 } },
 				-- {
 				-- 	ft = "trouble",

@@ -19,12 +19,24 @@ local function navigate_wrap(direction)
 	-- Try moving in the specified direction
 	vim.cmd("wincmd " .. direction)
 
-	-- If the current window hasn't changed, we're at the edge and need to wrap
-	if cur_win == vim.api.nvim_get_current_win() then
-		-- Move to the farthest window in the opposite direction
-		local opposite_directions = { h = "l", j = "k", k = "j", l = "h" }
-		vim.cmd("wincmd " .. opposite_directions[direction])
-	end
+	-- -- Log all the open windows
+	-- local windows = vim.api.nvim_list_wins()
+	-- print(vim.inspect(windows))
+	-- -- Find the left most window
+	-- local left_most_win = windows[1]
+	-- for _, win in ipairs(windows) do
+	-- 	if vim.api.nvim_win_get_config(win).relative == "" then
+	-- 		left_most_win = win
+	-- 		break
+	-- 	end
+	-- end
+
+	-- -- If the current window hasn't changed, we're at the edge and need to wrap
+	-- if cur_win == vim.api.nvim_get_current_win() then
+	-- 	-- Move to the farthest window in the opposite direction
+	-- 	local opposite_directions = { h = "l", j = "k", k = "j", l = "h" }
+	-- 	vim.cmd("wincmd " .. opposite_directions[direction])
+	-- end
 end
 
 -- local function navigate_wrap(direction)
