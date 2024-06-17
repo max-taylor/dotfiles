@@ -107,7 +107,12 @@ return {
 					pinned = true,
 					title = "Trouble qflist",
 					filter = function(_buf, win)
-						return vim.w[win].trouble.mode == "qflist"
+						-- Check if valid win
+						if vim.w[win] then
+							return vim.w[win].trouble.mode == "qflist"
+						end
+
+						return false
 					end,
 					open = "Trouble qflist focus=false filter.severity=vim.diagnostic.severity.ERROR",
 					size = { height = 0.4 },

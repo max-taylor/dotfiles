@@ -7,6 +7,7 @@ vim.keymap.set("n", "xl", function()
 	vim.diagnostic.goto_next()
 	vim.lsp.buf.code_action()
 end, { desc = "Goto Next [L]ocation with show code actions" })
+vim.keymap.set("n", "xm", vim.diagnostic.open_float, { desc = "show diagnostic [e]rror messages" })
 
 -- Add the TSC keymaps
 vim.keymap.set("n", "xr", ":TSC<CR>", { desc = "TSC Run" })

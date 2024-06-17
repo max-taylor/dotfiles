@@ -104,6 +104,13 @@ return {
 					-- capabilities = {},
 					settings = {
 						Lua = {
+							format = {
+								enable = true,
+								defaultConfig = {
+									indent = 2,
+									tabWidth = 2,
+								},
+							},
 							completion = {
 								callSnippet = "Replace",
 							},

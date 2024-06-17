@@ -2,19 +2,23 @@ return {
 	{
 		"akinsho/toggleterm.nvim",
 		version = "*",
-		config = function()
-			vim.keymap.set("n", "<leader>t", ":ToggleTerm<CR>", { silent = true })
-			-- Rebind to close the terminal on <Esc> in terminal mode
-			vim.keymap.set("t", "<Esc>", "<C-\\><C-n> :ToggleTerm<CR>", { desc = "Exit terminal mode" })
-
-			require("toggleterm").setup({
-				shade_filetypes = {},
-				shade_terminals = true,
-				insert_mappings = true,
-				persist_size = true,
-				direction = "float",
-				start_in_insert = true,
-			})
-		end,
+		opts = {
+			shade_filetypes = {},
+			shade_terminals = true,
+			insert_mappings = true,
+			persist_size = true,
+			direction = "float",
+			start_in_insert = true,
+			on_open = function(term)
+				vim.cmd("startinsert")
+				vim.keymap.set(
+					{ "t", "n" },
+					"<Esc>",
+					"<C-\\><C-n> :ToggleTerm<CR>",
+					{ desc = "Exit terminal mode", buffer = term.bufnr }
+				)
+			end,
+		},
+		keys = { { "<leader>t", ":ToggleTerm<CR>", desc = "Open terminal" } },
 	},
 }
