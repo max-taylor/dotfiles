@@ -4,6 +4,9 @@ return {
 		event = "VeryLazy",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 		opts = {
+			-- options = {
+			-- 	disabled_filetypes = { "NvimTree", "trouble", "oldfiles" },
+			-- },
 			sections = {
 				lualine_a = { "mode" },
 				lualine_b = { "diff", "diagnostics" },
