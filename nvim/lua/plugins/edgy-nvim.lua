@@ -10,17 +10,21 @@ return {
 
 			vim.keymap.set("n", "<leader>ut", function()
 				edgy.toggle("left")
-			end, { desc = "Toggle sidebar" })
+			end, { desc = "[T]oggle edgy" })
+
+			vim.keymap.set("n", "<leader>us", function()
+				edgy.select("left")
+			end, { desc = "[S]elect edgy view" })
 
 			-- vim.keymap.set("n", "<leader>uo", function()
-			-- 	lualine_extensions.focus()
-			-- end, { desc = "Toggle sidebar" })
+			-- 	edgy.select("left", "Old files")
+			-- end, { desc = "Focus oldfiles" })
 		end,
 		dependencies = { "folke/trouble.nvim" },
 		opts = {
 			options = {
 				left = {
-					size = 50,
+					size = 40,
 				},
 			},
 			animate = {

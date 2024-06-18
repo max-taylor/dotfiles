@@ -1,4 +1,4 @@
-local MAX_FILES = 10
+local MAX_FILES = 5
 
 local M = {}
 
@@ -60,26 +60,54 @@ M.get_bufnr = function()
 	return M.bufnr
 end
 
+-- Inspired by Telescope oldfiles filtering: https://github.com/nvim-telescope/telescope.nvim/blob/c392f1b78eaaf870ca584bd698e78076ed301b26/lua/telescope/builtin/__internal.lua#L547
+local function validate_filepath(results, file)
+	local file_stat = vim.loop.fs_stat(file)
+
+	if
+		file_stat
+		and file_stat.type == "file"
+		and not vim.tbl_contains(results, file)
+		and vim.fn.bufwinnr(file) == -1
+		and is_within_cwd(file)
+	then
+		return true
+	end
+
+	return false
+end
+
 M.load_oldfiles = function()
 	local oldfiles = vim.v.oldfiles
 	local results = {}
 
-	for _, file in ipairs(oldfiles) do
-		local file_stat = vim.loop.fs_stat(file)
+	-- local open_buffers = vim.api.nvim_list_bufs()
+	-- Get detailed information about all buffers
+	local buffers_info = vim.fn.getbufinfo()
 
-		-- Inspired by Telescope oldfiles filtering: https://github.com/nvim-telescope/telescope.nvim/blob/c392f1b78eaaf870ca584bd698e78076ed301b26/lua/telescope/builtin/__internal.lua#L547
-		if
-			file_stat
-			and file_stat.type == "file"
-			and not vim.tbl_contains(results, file)
-			and vim.fn.bufwinnr(file) == -1
-			and is_within_cwd(file)
-		then
-			table.insert(results, file)
-		end
+	-- Sort buffers by last accessed time in descending order
+	table.sort(buffers_info, function(a, b)
+		return a.lastused > b.lastused
+	end)
 
+	for _, buf in ipairs(buffers_info) do
+		local file = vim.api.nvim_buf_get_name(buf.bufnr)
 		if #results == MAX_FILES then
 			break
+		end
+
+		if validate_filepath(results, file) then
+			table.insert(results, file)
+		end
+	end
+
+	for _, file in ipairs(oldfiles) do
+		if #results == MAX_FILES then
+			break
+		end
+
+		if validate_filepath(results, file) then
+			table.insert(results, file)
 		end
 	end
 
@@ -155,7 +183,7 @@ M.setup = function()
 			relativenumber = false, -- Disable relative line numbers
 			-- cursorline = true, -- Highlight the current line
 		},
-		filter = function(buf, win)
+		filter = function(buf)
 			return buf == M.bufnr
 		end,
 	}
