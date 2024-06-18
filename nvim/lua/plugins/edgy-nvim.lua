@@ -1,4 +1,4 @@
-local lualine_extensions = require("extensions.lualine")
+local edgy_extensions = require("extensions.edgy")
 
 return {
 	{
@@ -8,7 +8,7 @@ return {
 			local edgy = require("edgy")
 			vim.opt.splitkeep = "screen"
 
-			vim.keymap.set("n", "<leader>u", function()
+			vim.keymap.set("n", "<leader>ut", function()
 				edgy.toggle("left")
 			end, { desc = "Toggle sidebar" })
 
@@ -33,8 +33,8 @@ return {
 					pinned = true,
 					title = "Trouble qflist",
 					filter = function(_buf, win)
-						-- Check if valid win
-						if vim.w[win] then
+						-- Check if the window exists and if trouble exists on it
+						if vim.w[win] and vim.w[win].trouble then
 							return vim.w[win].trouble.mode == "qflist"
 						end
 
@@ -43,6 +43,7 @@ return {
 					open = "Trouble qflist focus=false filter.severity=vim.diagnostic.severity.ERROR",
 					size = { height = 0.4 },
 				},
+				edgy_extensions.setup(),
 				-- {
 				-- 	ft = "trouble",
 				-- 	pinned = true,
@@ -53,7 +54,6 @@ return {
 				-- 	open = "Trouble loclist focus=false filter.severity=vim.diagnostic.severity.ERROR",
 				-- 	size = { height = 0.4 },
 				-- },
-				-- lualine_extensions.setup(),
 				-- { ft = "loclist", title = "Loclist" },
 				-- { ft = "help", pinned = true, title = "Location List", size = { height = 0.4 } },
 				-- {
