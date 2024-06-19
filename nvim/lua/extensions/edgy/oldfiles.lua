@@ -1,6 +1,8 @@
-local MAX_FILES = 5
+local MAX_FILES = 10
 
 local M = {}
+
+local FILE_TYPE = "oldfiles"
 
 local function is_within_cwd(filepath)
 	-- Get the current working directory
@@ -50,7 +52,7 @@ M.get_bufnr = function()
 		local bufnr = vim.api.nvim_get_current_buf()
 
 		-- Set the buffer's file type to 'oldfiles' (for consistency)
-		vim.bo[bufnr].filetype = "oldfiles"
+		vim.bo[bufnr].filetype = FILE_TYPE
 		vim.bo[bufnr].buftype = "nofile"
 		vim.bo[bufnr].swapfile = false
 
@@ -157,7 +159,6 @@ local function open()
 		desc = "Update oldfiles sidebar auto command",
 		group = vim.api.nvim_create_augroup("oldfiles_sidebar", { clear = true }),
 		callback = function()
-			print("Updating oldfiles")
 			M.load_oldfiles()
 		end,
 	})
@@ -173,7 +174,7 @@ end
 
 M.setup = function()
 	return {
-		ft = "oldfiles",
+		ft = FILE_TYPE,
 		title = "Old Files",
 		size = { height = 0.4 },
 		pinned = true, -- Keep the view always shown in the edgebar

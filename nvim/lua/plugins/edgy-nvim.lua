@@ -1,4 +1,5 @@
-local edgy_extensions = require("extensions.edgy")
+local oldfiles_edgy = require("extensions.edgy.oldfiles")
+local jumplist_edgy = require("extensions.edgy.jumplist")
 
 return {
 	{
@@ -32,6 +33,8 @@ return {
 			},
 			close_when_all_hidden = false,
 			left = {
+				oldfiles_edgy.setup(),
+				-- jumplist_edgy.setup(),
 				{
 					ft = "trouble",
 					pinned = true,
@@ -47,7 +50,6 @@ return {
 					open = "Trouble qflist focus=false filter.severity=vim.diagnostic.severity.ERROR",
 					size = { height = 0.4 },
 				},
-				edgy_extensions.setup(),
 				-- {
 				-- 	ft = "trouble",
 				-- 	pinned = true,
