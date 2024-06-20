@@ -74,11 +74,10 @@ vim.opt.hlsearch = true
 -- Auto reload files https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/383044#383044
 vim.o.autoread = true
 
--- TODO: Causing issues with the oldfiles edgy extension
--- vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "CursorHoldI", "FocusGained" }, {
--- 	command = "if mode() != 'c' | checktime | endif",
--- 	pattern = { "*" },
--- })
+vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "CursorHoldI", "FocusGained" }, {
+	command = "if mode() != 'c' | checktime | endif",
+	pattern = { "*" },
+})
 
 -- vim.opt.colorcolumn = "81" -- Line length marker at 81 columns
 -- vim.opt.textwidth = 80 -- Wrap at 80 columns

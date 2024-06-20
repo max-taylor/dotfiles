@@ -1,4 +1,5 @@
 local MAX_FILES = 7
+local FILE_TYPE = "oldfiles"
 
 local window_opts = {
 	-- Window-specific options
@@ -6,10 +7,7 @@ local window_opts = {
 	-- cursorline = true, -- Highlight the current line
 }
 
-local M = {}
-
-local FILE_TYPE = "oldfiles"
-
+-- PURE functions
 local function is_within_cwd(filepath)
 	-- Get the current working directory
 	local cwd = vim.fn.getcwd()
@@ -34,10 +32,8 @@ local function get_valid_winnr()
 			return win
 		end
 	end
-	-- Create a new window
-	-- vim.api.nvim_command("enew")
-	-- return vim.api.nvim_get_current_win()
-	--
+
+	-- TODO: Create a new window if there is no valid window
 	return nil
 end
 
@@ -52,30 +48,21 @@ local function open_file(filepath)
 	vim.cmd.edit(vim.fn.fnameescape(filepath))
 end
 
-M.get_bufnr = function()
-	if not M.bufnr then
-		vim.api.nvim_command("enew") -- Open a new empty buffer
-		local bufnr = vim.api.nvim_get_current_buf()
-
-		-- Set the buffer's file type to 'oldfiles' (for consistency)
-		vim.bo[bufnr].filetype = FILE_TYPE
-		vim.bo[bufnr].buftype = "nofile"
-		vim.bo[bufnr].swapfile = false
-
-		-- Get the buffer
-		vim.api.nvim_set_current_buf(bufnr)
-
-		-- Check if a window is already open for the buffer
-		local existing_win = vim.fn.bufwinnr(bufnr)
-
-		if existing_win == -1 then
-			vim.api.nvim_open_win(bufnr, true, window_opts)
-		end
-
-		M.bufnr = bufnr
+local function format_filepath(filepath)
+	local relative_path = vim.fn.fnamemodify(filepath, ":~:.")
+	-- Match the pattern to split the path into the filename and directory path
+	local dir, filename = relative_path:match("^(.-)([^/]-([^%.]+))$")
+	-- Remove the trailing slash from the directory if it exists
+	if dir:sub(-1) == "/" then
+		dir = dir:sub(1, -2)
 	end
 
-	return M.bufnr
+	-- Return the formatted string based on whether dir is empty or not
+	if dir == "" then
+		return filename
+	else
+		return filename .. " - " .. dir
+	end
 end
 
 -- Inspired by Telescope oldfiles filtering: https://github.com/nvim-telescope/telescope.nvim/blob/c392f1b78eaaf870ca584bd698e78076ed301b26/lua/telescope/builtin/__internal.lua#L547
@@ -95,7 +82,7 @@ local function validate_filepath(results, file)
 	return false
 end
 
-M.load_oldfiles = function()
+local function get_oldfiles()
 	local oldfiles = vim.v.oldfiles
 	local results = {}
 
@@ -129,7 +116,40 @@ M.load_oldfiles = function()
 		end
 	end
 
-	M.results = results
+	return results
+end
+
+-- Module
+local M = {}
+
+M.get_bufnr = function()
+	if not M.bufnr then
+		vim.api.nvim_command("enew") -- Open a new empty buffer
+		local bufnr = vim.api.nvim_get_current_buf()
+
+		-- Set the buffer's file type to 'oldfiles' (for consistency)
+		vim.bo[bufnr].filetype = FILE_TYPE
+		vim.bo[bufnr].buftype = "nofile"
+		vim.bo[bufnr].swapfile = false
+
+		-- Get the buffer
+		vim.api.nvim_set_current_buf(bufnr)
+
+		-- Check if a window is already open for the buffer
+		local existing_win = vim.fn.bufwinnr(bufnr)
+
+		if existing_win == -1 then
+			vim.api.nvim_open_win(bufnr, true, window_opts)
+		end
+
+		M.bufnr = bufnr
+	end
+
+	return M.bufnr
+end
+
+M.load_oldfiles = function()
+	M.results = get_oldfiles()
 
 	for idx, filepath in ipairs(M.results) do
 		vim.keymap.set("n", "<leader>u" .. idx, function()
@@ -140,15 +160,15 @@ M.load_oldfiles = function()
 	local shortened_results = {}
 	-- Remove the cwd prefix from each file path
 	-- and add it to the shortened_results list
-	for _, file in ipairs(results) do
-		table.insert(shortened_results, vim.fn.fnamemodify(file, ":~:."))
+	for _, file in ipairs(M.results) do
+		table.insert(shortened_results, format_filepath(file))
 	end
 
 	-- replace the buffer contents with the new results
 	vim.api.nvim_buf_set_lines(M.get_bufnr(), 0, -1, false, shortened_results)
 end
 
-local function open()
+M.open = function()
 	M.load_oldfiles()
 
 	-- Auto command to update the list of oldfiles
@@ -176,7 +196,7 @@ M.setup = function()
 		title = "Old Files",
 		size = { height = 0.4 },
 		pinned = true, -- Keep the view always shown in the edgebar
-		open = open,
+		open = M.open,
 		wo = window_opts,
 		filter = function(buf)
 			return buf == M.bufnr
