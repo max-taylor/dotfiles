@@ -40,3 +40,17 @@ vim.keymap.set("i", "<C-s>", "<C-O>:update<cr><Esc>")
 
 -- Rebind quit window to <C-q>
 vim.keymap.set("n", "<C-q>", "<C-w>q")
+
+-- Diagnostic keymaps
+vim.keymap.set("n", "xk", vim.diagnostic.goto_prev, { desc = "Goto previous diagnostic message" })
+vim.keymap.set("n", "xj", vim.diagnostic.goto_next, { desc = "Goto next diagnostic message" })
+vim.keymap.set("n", "xh", vim.lsp.buf.code_action, { desc = "Show code actions" })
+vim.keymap.set("n", "xl", function()
+	vim.diagnostic.goto_next()
+	vim.lsp.buf.code_action()
+end, { desc = "Goto Next [L]ocation with show code actions" })
+vim.keymap.set("n", "xm", vim.diagnostic.open_float, { desc = "show diagnostic [e]rror messages" })
+
+vim.keymap.set("n", "xq", vim.diagnostic.setloclist, { desc = "Open diagnostic loclist" })
+-- Add the TSC keymaps
+vim.keymap.set("n", "xr", ":TSC<CR>", { desc = "TSC Run" })

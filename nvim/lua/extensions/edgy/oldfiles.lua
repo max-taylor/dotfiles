@@ -1,4 +1,10 @@
-local MAX_FILES = 10
+local MAX_FILES = 7
+
+local window_opts = {
+	-- Window-specific options
+	relativenumber = false, -- Disable relative line numbers
+	-- cursorline = true, -- Highlight the current line
+}
 
 local M = {}
 
@@ -55,6 +61,16 @@ M.get_bufnr = function()
 		vim.bo[bufnr].filetype = FILE_TYPE
 		vim.bo[bufnr].buftype = "nofile"
 		vim.bo[bufnr].swapfile = false
+
+		-- Get the buffer
+		vim.api.nvim_set_current_buf(bufnr)
+
+		-- Check if a window is already open for the buffer
+		local existing_win = vim.fn.bufwinnr(bufnr)
+
+		if existing_win == -1 then
+			vim.api.nvim_open_win(bufnr, true, window_opts)
+		end
 
 		M.bufnr = bufnr
 	end
@@ -133,24 +149,6 @@ M.load_oldfiles = function()
 end
 
 local function open()
-	-- Get the buffer
-	-- vim.api.nvim_set_current_buf(bufnr)
-
-	-- -- Check if a window is already open for the buffer
-	-- local existing_win = vim.fn.bufwinnr(bufnr)
-	--
-	-- if existing_win == -1 then
-	-- 	vim.api.nvim_open_win(bufnr, true, {
-	-- 		relative = "editor",
-	-- 		width = 50,
-	-- 		height = 10,
-	-- 		row = 1,
-	-- 		col = 1,
-	-- 		style = "minimal",
-	-- 		border = "single",
-	-- 	})
-	-- end
-
 	M.load_oldfiles()
 
 	-- Auto command to update the list of oldfiles
@@ -179,11 +177,7 @@ M.setup = function()
 		size = { height = 0.4 },
 		pinned = true, -- Keep the view always shown in the edgebar
 		open = open,
-		wo = {
-			-- Window-specific options
-			relativenumber = false, -- Disable relative line numbers
-			-- cursorline = true, -- Highlight the current line
-		},
+		wo = window_opts,
 		filter = function(buf)
 			return buf == M.bufnr
 		end,
