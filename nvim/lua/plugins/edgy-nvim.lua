@@ -17,6 +17,12 @@ return {
 				edgy.select("left")
 			end, { desc = "[S]elect edgy view" })
 
+			-- Remove background for EdgyNormal
+			-- Set highlight groups without a background color
+			-- vim.api.nvim_set_hl(0, "EdgyWinBar", { guibg = "NONE", guifg = "#D8DEE9" })
+			-- vim.api.nvim_set_hl(0, "EdgyWinBarNC", { guibg = "NONE", guifg = "#D8DEE9" })
+			-- vim.api.nvim_set_hl(0, "EdgyNormal", { guibg = "NONE", guifg = "#D8DEE9" })
+
 			-- vim.keymap.set("n", "<leader>uo", function()
 			-- 	edgy.select("left", "Old files")
 			-- end, { desc = "Focus oldfiles" })
@@ -28,13 +34,16 @@ return {
 					size = 40,
 				},
 			},
+			wo = {
+				winbar = false,
+			},
 			animate = {
 				enabled = false,
 			},
 			close_when_all_hidden = false,
 			left = {
-				oldfiles_edgy.setup(),
-				-- jumplist_edgy.setup(),
+				-- oldfiles_edgy.setup(),
+				jumplist_edgy.setup(),
 				{
 					ft = "trouble",
 					pinned = true,

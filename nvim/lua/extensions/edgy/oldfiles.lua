@@ -133,16 +133,23 @@ M.get_bufnr = function()
 		vim.bo[bufnr].swapfile = false
 
 		-- Get the buffer
-		vim.api.nvim_set_current_buf(bufnr)
-
-		-- Check if a window is already open for the buffer
-		local existing_win = vim.fn.bufwinnr(bufnr)
-
-		if existing_win == -1 then
-			vim.api.nvim_open_win(bufnr, true, window_opts)
-		end
+		-- vim.api.nvim_set_current_buf(bufnr)
 
 		M.bufnr = bufnr
+	end
+
+	-- Check if a window is already open for the buffer
+	local existing_win = vim.fn.bufwinnr(M.bufnr)
+
+	if existing_win == -1 then
+		vim.api.nvim_open_win(M.bufnr, false, {
+			relative = "editor",
+			width = 1,
+			height = 1,
+			col = 0,
+			row = 0,
+			-- style = "minimal",
+		})
 	end
 
 	return M.bufnr
