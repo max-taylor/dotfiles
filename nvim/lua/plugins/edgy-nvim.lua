@@ -42,7 +42,7 @@ return {
 			},
 			close_when_all_hidden = false,
 			left = {
-				-- oldfiles_edgy.setup(),
+				oldfiles_edgy.setup(),
 				-- jumplist_edgy.setup(),
 				{
 					ft = "trouble",

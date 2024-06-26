@@ -27,6 +27,7 @@ local function get_valid_winnr()
 		local buf = vim.api.nvim_win_get_buf(win)
 		-- Get the name of the buffer
 		local buf_name = vim.api.nvim_buf_get_name(buf)
+		print("Buffer name: " .. buf_name)
 		-- If buf_name is not empty then return it
 		if buf_name ~= "" then
 			return win
@@ -34,7 +35,13 @@ local function get_valid_winnr()
 	end
 
 	-- TODO: Create a new window if there is no valid window
-	return nil
+	-- local winnr = vim.api.nvim_open_win(0, false, {
+	-- 	relative = "editor",
+	-- 	width = 1,
+	-- 	height = 1,
+	-- 	col = 0,
+	-- 	row = 0,
+	-- })
 end
 
 local function open_file(filepath)
@@ -42,8 +49,10 @@ local function open_file(filepath)
 
 	-- Set focus to winnr if there is a valid one
 	if winnr then
+		print("Found valid window")
 		vim.api.nvim_set_current_win(winnr)
 	end
+	print("Opening file: " .. filepath)
 
 	vim.cmd.edit(vim.fn.fnameescape(filepath))
 end
@@ -142,6 +151,7 @@ M.get_bufnr = function()
 	local existing_win = vim.fn.bufwinnr(M.bufnr)
 
 	if existing_win == -1 then
+		print("Creating new window")
 		vim.api.nvim_open_win(M.bufnr, false, {
 			relative = "editor",
 			width = 1,
@@ -175,7 +185,11 @@ M.load_oldfiles = function()
 	vim.api.nvim_buf_set_lines(M.get_bufnr(), 0, -1, false, shortened_results)
 end
 
+local counter = 0
+
 M.open = function()
+	counter = counter + 1
+	print("Opening: " .. counter .. " times")
 	M.load_oldfiles()
 
 	-- Auto command to update the list of oldfiles
