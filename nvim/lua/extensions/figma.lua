@@ -36,6 +36,79 @@ local text_color_table = {
 	["#E8E7E8"] = "gray-700",
 }
 
+local function convert_value_to_rem(value)
+	local value = tonumber(value)
+	if not value then
+		print("Value is not a number")
+		return
+	end
+
+	local rem_value = value / 16
+	return rem_value
+end
+
+local function strip_px_from_value(value)
+	return value:gsub("px", "")
+end
+
+local function build_div_tag(string_input)
+	local kv_table = {}
+
+	-- Split the input into lines and extract key-value pairs
+	for line in string_input:gmatch("[^\r\n]+") do
+		local key, value = line:match("^%s*(.-)%s*:%s*(.-)%s*;?$")
+		if key and value then
+			kv_table[key] = value
+		end
+	end
+
+	local font_size = kv_table["font-size"]
+	local line_height = kv_table["line-height"]
+	local class_name = ""
+
+	if not font_size or not line_height then
+		print("Font size or line height not found")
+	else
+		local concatted_font_string = font_size .. ", " .. line_height
+		local font_size_value = font_size_table[concatted_font_string]
+		if not font_size_value then
+			local rem_font_size = convert_value_to_rem(strip_px_from_value(font_size))
+			local rem_line_height = convert_value_to_rem(strip_px_from_value(line_height))
+
+			if not rem_font_size or not rem_line_height then
+				print("Rem font size or line height are not numbers")
+			else
+				class_name = "text-[" .. rem_font_size .. "rem] leading-[" .. rem_line_height .. "rem]"
+			end
+		else
+			class_name = "text-" .. font_size_value
+		end
+	end
+
+	local font_weight = kv_table["font-weight"]
+	if not font_weight then
+		print("Font weight not found")
+	else
+		local font_weight_value = font_weight_table[font_weight]
+		if not font_weight_value then
+			print("Font weight not found in table")
+		else
+			if font_weight_value ~= "normal" then
+				class_name = class_name .. " font-" .. font_weight_value
+			end
+		end
+	end
+
+	local first_div_tag = '<div className="' .. class_name .. '">'
+	local full_name = first_div_tag .. "</div>"
+
+	return {
+		full_name = full_name,
+		class_name = class_name,
+		first_div_tag = first_div_tag,
+	}
+end
+
 local textFigmaInput = Input({
 	position = "50%",
 	size = {
@@ -58,48 +131,9 @@ local textFigmaInput = Input({
 		print("Input Closed!")
 	end,
 	on_submit = function(string_input)
-		local kv_table = {}
-
-		-- Split the input into lines and extract key-value pairs
-		for line in string_input:gmatch("[^\r\n]+") do
-			local key, value = line:match("^%s*(.-)%s*:%s*(.-)%s*;?$")
-			if key and value then
-				kv_table[key] = value
-			end
-		end
-
-		local font_size = kv_table["font-size"]
-		local line_height = kv_table["line-height"]
-		local class_name = ""
-
-		if not font_size or not line_height then
-			print("Font size or line height not found")
-		else
-			local concatted_font_string = font_size .. ", " .. line_height
-			local font_size_value = font_size_table[concatted_font_string]
-			if not font_size_value then
-				print("Font size not found in table")
-			else
-				class_name = "text-" .. font_size_value
-			end
-		end
-
-		local font_weight = kv_table["font-weight"]
-		if not font_weight then
-			print("Font weight not found")
-			return
-		else
-			local font_weight_value = font_weight_table[font_weight]
-			if not font_weight_value then
-				print("Font weight not found in table")
-				return
-			else
-				class_name = class_name .. " font-" .. font_weight_value
-			end
-		end
-
-		local first_div_tag = '<div className="' .. class_name .. '">'
-		local full_name = first_div_tag .. "</div>"
+		local div_tag = build_div_tag(string_input)
+		local full_name = div_tag.full_name
+		local first_div_tag = div_tag.first_div_tag
 
 		-- Write the class name to the previous buffer and cursor position
 		vim.api.nvim_put({ full_name }, "l", true, true)
@@ -123,24 +157,40 @@ local M = {}
 
 M.setup = function()
 	vim.keymap.set("n", "<leader>ct", function()
-		textFigmaInput:show()
-		-- Enter normal mode
-		vim.api.nvim_command("stopinsert")
+		local clipboard_content = vim.fn.getreg("+")
+		local div_tag = build_div_tag(clipboard_content)
+		local full_name = div_tag.full_name
+		local first_div_tag = div_tag.first_div_tag
 
-		vim.keymap.set("n", "q", function()
-			textFigmaInput:unmount()
-		end, { desc = "Close commit popup", buffer = textFigmaInput.bufnr })
+		-- Write the class name to the previous buffer and cursor position
+		vim.api.nvim_put({ full_name }, "l", true, true)
 
-		-- -- Map Command-V to paste from the clipboard in insert mode
-		-- vim.keymap.set("i", "<D-v>", function()
-		-- 	print("called")
+		-- Calculate cursor position
+		local cursor_pos = vim.api.nvim_win_get_cursor(0)
+		cursor_pos[1] = cursor_pos[1] - 1
+		cursor_pos[2] = #first_div_tag + 1
+		vim.api.nvim_win_set_cursor(0, cursor_pos)
+
+		-- -- Enter insert mode after the text is written
+		-- vim.api.nvim_command("startinsert")
+		-- Enter insert mode after setting cursor position
+		vim.schedule(function()
+			vim.api.nvim_command("normal! i")
+		end)
+
+		-- textFigmaInput:show()
+		-- -- Enter normal mode
+		-- vim.api.nvim_command("stopinsert")
+		--
+		-- vim.keymap.set("n", "q", function()
+		-- 	textFigmaInput:unmount()
+		-- end, { desc = "Close commit popup", buffer = textFigmaInput.bufnr })
+		--
+		-- -- Map Command-V to paste from the clipboard in normal mode
+		-- vim.keymap.set("n", "v", function()
+		-- 	local clipboard_content = vim.fn.getreg("+")
+		-- 	vim.api.nvim_put({ clipboard_content }, "c", true, true)
 		-- end, { noremap = true, silent = true, buffer = textFigmaInput.bufnr })
-
-		-- Map Command-V to paste from the clipboard in normal mode
-		vim.keymap.set("n", "v", function()
-			local clipboard_content = vim.fn.getreg("+")
-			vim.api.nvim_put({ clipboard_content }, "c", true, true)
-		end, { noremap = true, silent = true, buffer = textFigmaInput.bufnr })
 	end, { desc = "Toggle commit popup" })
 end
 
