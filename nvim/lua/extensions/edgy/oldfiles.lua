@@ -4,16 +4,8 @@ local FILE_TYPE = "oldfiles"
 local window_opts = {
 	-- Window-specific options
 	relativenumber = false, -- Disable relative line numbers
+	winhighlight = "",
 	-- cursorline = true, -- Highlight the current line
-	-- wo = {
-	-- 	-- winhighlight = "Normal:NormalFloat,FloatBorder:NormalFloat",
-	-- 	winhighlight = "WinBar:EdgyWinBar,Normal:EdgyNormal",
-	-- 	winbar = true,
-	-- 	winfixwidth = true,
-	-- 	winfixheight = false,
-	-- 	spell = false,
-	-- 	signcolumn = "no",
-	-- },
 }
 
 -- PURE functions
@@ -24,6 +16,17 @@ local function is_within_cwd(filepath)
 	local normalized_path = vim.fn.fnamemodify(filepath, ":p")
 	-- Check if the normalized_path starts with the cwd
 	return string.sub(normalized_path, 1, #cwd) == cwd
+end
+
+local function create_window(bufnr)
+	print("Creating window", bufnr)
+	return vim.api.nvim_open_win(bufnr, false, {
+		relative = "editor",
+		width = 1,
+		height = 1,
+		col = 0,
+		row = 0,
+	})
 end
 
 local function get_valid_winnr()
@@ -52,25 +55,14 @@ local function get_valid_winnr()
 		end
 	end
 
-	return nil
-	-- TODO: Create a new window if there is no valid window
-	-- local winnr = vim.api.nvim_open_win(0, false, {
-	-- 	relative = "editor",
-	-- 	width = 1,
-	-- 	height = 1,
-	-- 	col = 0,
-	-- 	row = 0,
-	-- })
+	print("No valid window found, creating a new one")
+	return create_window(0)
 end
 
 local function open_file(filepath)
 	local winnr = get_valid_winnr()
 
-	-- Set focus to winnr if there is a valid one
-	if winnr then
-		vim.api.nvim_set_current_win(winnr)
-	end
-
+	vim.api.nvim_set_current_win(winnr)
 	vim.cmd.edit(vim.fn.fnameescape(filepath))
 end
 
@@ -168,15 +160,7 @@ M.get_bufnr = function()
 	local existing_win = vim.fn.bufwinnr(M.bufnr)
 
 	if existing_win == -1 then
-		print("Creating new window")
-		vim.api.nvim_open_win(M.bufnr, false, {
-			relative = "editor",
-			width = 1,
-			height = 1,
-			col = 0,
-			row = 0,
-			-- style = "minimal",
-		})
+		create_window(M.bufnr)
 	end
 
 	return M.bufnr
@@ -185,6 +169,7 @@ end
 M.load_oldfiles = function()
 	M.results = get_oldfiles()
 
+	-- TODO: Move this into M.open and have it run only once
 	for idx, filepath in ipairs(M.results) do
 		vim.keymap.set("n", "<leader>u" .. idx, function()
 			open_file(filepath)
@@ -202,19 +187,15 @@ M.load_oldfiles = function()
 	vim.api.nvim_buf_set_lines(M.get_bufnr(), 0, -1, false, shortened_results)
 end
 
-local counter = 0
-
 M.open = function()
-	counter = counter + 1
-	print("Opening: " .. counter .. " times")
 	M.load_oldfiles()
 
 	-- Auto command to update the list of oldfiles
-
 	vim.api.nvim_create_autocmd({ "bufenter" }, {
 		desc = "Update oldfiles sidebar auto command",
 		group = vim.api.nvim_create_augroup("oldfiles_sidebar", { clear = true }),
 		callback = function()
+			-- Only call update if the buffer is open
 			if vim.fn.bufwinnr(M.bufnr) ~= -1 then
 				M.load_oldfiles()
 			end
