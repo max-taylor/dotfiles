@@ -5,6 +5,15 @@ local window_opts = {
 	-- Window-specific options
 	relativenumber = false, -- Disable relative line numbers
 	-- cursorline = true, -- Highlight the current line
+	-- wo = {
+	-- 	-- winhighlight = "Normal:NormalFloat,FloatBorder:NormalFloat",
+	-- 	winhighlight = "WinBar:EdgyWinBar,Normal:EdgyNormal",
+	-- 	winbar = true,
+	-- 	winfixwidth = true,
+	-- 	winfixheight = false,
+	-- 	spell = false,
+	-- 	signcolumn = "no",
+	-- },
 }
 
 -- PURE functions
@@ -18,22 +27,32 @@ local function is_within_cwd(filepath)
 end
 
 local function get_valid_winnr()
+	local function is_valid_window(win)
+		local buf = vim.api.nvim_win_get_buf(win)
+		local buf_name = vim.api.nvim_buf_get_name(buf)
+		local buftype = vim.bo[buf].buftype
+
+		return buf_name ~= "" and buftype ~= "nofile"
+	end
+
+	-- Check the current winnr, useful if using the shortcut
+	local winnr = vim.fn.win_getid()
+
+	if is_valid_window(winnr) then
+		return winnr
+	end
+
 	-- Get the list of currently open windows
 	local windows = vim.api.nvim_list_wins()
 
 	-- Iterate over the list of windows
 	for _, win in ipairs(windows) do
-		-- Get the buffer associated with the window
-		local buf = vim.api.nvim_win_get_buf(win)
-		-- Get the name of the buffer
-		local buf_name = vim.api.nvim_buf_get_name(buf)
-		print("Buffer name: " .. buf_name)
-		-- If buf_name is not empty then return it
-		if buf_name ~= "" then
+		if is_valid_window(win) then
 			return win
 		end
 	end
 
+	return nil
 	-- TODO: Create a new window if there is no valid window
 	-- local winnr = vim.api.nvim_open_win(0, false, {
 	-- 	relative = "editor",
@@ -49,10 +68,8 @@ local function open_file(filepath)
 
 	-- Set focus to winnr if there is a valid one
 	if winnr then
-		print("Found valid window")
 		vim.api.nvim_set_current_win(winnr)
 	end
-	print("Opening file: " .. filepath)
 
 	vim.cmd.edit(vim.fn.fnameescape(filepath))
 end
@@ -198,7 +215,9 @@ M.open = function()
 		desc = "Update oldfiles sidebar auto command",
 		group = vim.api.nvim_create_augroup("oldfiles_sidebar", { clear = true }),
 		callback = function()
-			M.load_oldfiles()
+			if vim.fn.bufwinnr(M.bufnr) ~= -1 then
+				M.load_oldfiles()
+			end
 		end,
 	})
 
