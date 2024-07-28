@@ -3,7 +3,7 @@ local function set_window_theme()
 	vim.api.nvim_set_hl(0, "WinSeparator", { fg = "#BE90D4", bold = true })
 
 	-- LineNr and CursorLineNr colors
-	-- vim.api.nvim_set_hl(0, "LineNr", { fg = "#89CFF0" })
+	vim.api.nvim_set_hl(0, "LineNr", { fg = "#89CFF0" })
 	-- vim.api.nvim_set_hl(0, "LineNr", { fg = "#4a2969" })
 	-- vim.api.nvim_set_hl(0, "LineNr", { fg = "white" })
 	-- vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#CE8CF8" })
@@ -38,20 +38,27 @@ return {
 		"folke/tokyonight.nvim",
 		lazy = false,
 		priority = 1000,
-		opts = {
-			transparent = true,
-			-- on_highlights = function(hl, colors)
-			-- 	hl.LineNr = {
-			-- 		fg = "#ffffff",
-			-- 	}
-			-- 	hl.CursorLineNr = {
-			-- 		fg = colors.orange,
-			-- 	}
-			-- end,
-		},
+		-- opts = {
+		-- 	-- transparent = true,
+		-- 	on_highlights = function(hl, colors)
+		-- 		hl.LineNr = {
+		-- 			fg = colors.yellow,
+		-- 		}
+		-- 		hl.CursorLineNr = {
+		-- 			fg = colors.orange,
+		-- 		}
+		-- 	end,
+		-- },
 		init = function()
 			-- require("tokyonight").setup({
-			-- 	transparent = true,
+			-- 	on_highlights = function(hl, colors)
+			-- 		hl.LineNr = {
+			-- 			fg = colors.yellow,
+			-- 		}
+			-- 		hl.CursorLineNr = {
+			-- 			fg = colors.orange,
+			-- 		}
+			-- 	end,
 			-- })
 			vim.cmd.colorscheme("tokyonight")
 
@@ -59,8 +66,16 @@ return {
 		end,
 		-- config = function()
 		-- 	require("tokyonight").setup({
-		-- 		transparent = true,
+		-- 		on_highlights = function(hl, colors)
+		-- 			hl.LineNr = {
+		-- 				fg = colors.yellow,
+		-- 			}
+		-- 			hl.CursorLineNr = {
+		-- 				fg = colors.orange,
+		-- 			}
+		-- 		end,
 		-- 	})
+		-- 	vim.cmd.colorscheme("tokyonight")
 		-- end,
 	},
 }
