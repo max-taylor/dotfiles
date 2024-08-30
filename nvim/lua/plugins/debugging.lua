@@ -40,6 +40,7 @@ return {
 				auto_open_qflist = false,
 				-- flags = { watch = true },
 				enable_progress_notifications = true,
+				run_as_monorepo = true,
 			})
 		end,
 	},
