@@ -12,7 +12,7 @@ return {
 					relativenumber = true,
 					number = true,
 					width = 60,
-					side = "right",
+					side = "left",
 				},
 				filters = {
 					dotfiles = false,

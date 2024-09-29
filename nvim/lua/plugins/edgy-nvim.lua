@@ -1,10 +1,11 @@
-local oldfiles_edgy = require("extensions.edgy.oldfiles")
-local jumplist_edgy = require("extensions.edgy.jumplist")
+-- local oldfiles_edgy = require("extensions.edgy.oldfiles")
+-- local jumplist_edgy = require("extensions.edgy.jumplist")
 
 return {
 	{
 		"folke/edgy.nvim",
 		event = "VeryLazy",
+		enabled = false,
 		init = function()
 			local edgy = require("edgy")
 			vim.opt.splitkeep = "screen"
@@ -27,7 +28,7 @@ return {
 		opts = {
 			options = {
 				left = {
-					size = 40,
+					size = 60,
 				},
 			},
 			wo = {
@@ -38,26 +39,36 @@ return {
 			},
 			close_when_all_hidden = false,
 			left = {
-				oldfiles_edgy.setup(),
-				-- jumplist_edgy.setup(),
 				{
-					ft = "trouble",
+					ft = "toggleterm",
 					pinned = true,
-					title = "Trouble qflist",
-					filter = function(_buf, win)
-						-- Check if the window exists and if trouble exists on it
-						if vim.w[win] and vim.w[win].trouble then
-							return vim.w[win].trouble.mode == "qflist"
-						end
-
-						return false
+					size = { height = 1 },
+					-- exclude floating windows
+					filter = function(buf, win)
+						return vim.api.nvim_win_get_config(win).relative == ""
 					end,
-					open = "Trouble qflist focus=false filter.severity=vim.diagnostic.severity.ERROR",
-					-- wo = {
-					-- 	winhighlight = "",
-					-- },
-					size = { height = 0.4 },
+					open = "ToggleTerm direction=vertical",
 				},
+				-- oldfiles_edgy.setup(),
+				-- jumplist_edgy.setup(),
+				-- {
+				-- 	ft = "trouble",
+				-- 	pinned = true,
+				-- 	title = "Trouble qflist",
+				-- 	filter = function(_buf, win)
+				-- 		-- Check if the window exists and if trouble exists on it
+				-- 		if vim.w[win] and vim.w[win].trouble then
+				-- 			return vim.w[win].trouble.mode == "qflist"
+				-- 		end
+				--
+				-- 		return false
+				-- 	end,
+				-- 	open = "Trouble qflist focus=false filter.severity=vim.diagnostic.severity.ERROR",
+				-- 	-- wo = {
+				-- 	-- 	winhighlight = "",
+				-- 	-- },
+				-- 	size = { height = 0.6 },
+				-- },
 			},
 		},
 	},
