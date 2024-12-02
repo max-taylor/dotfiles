@@ -94,6 +94,12 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	end,
 })
 
+-- Set the commentstring for the `move` filetype to `//`
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "move",
+	command = "setlocal commentstring=//\\ %s",
+})
+
 -- Save the file when leaving insert mode
 -- vim.api.nvim_create_autocmd("InsertLeave", {
 -- 	pattern = "*",

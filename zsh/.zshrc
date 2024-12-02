@@ -131,3 +131,10 @@ PATH=~/.console-ninja/.bin:$PATH
 eval "$(zoxide init zsh)"
 
 PATH=/Applications/Postgres.app/Contents/Versions/latest/bin:$PATH
+
+# bun completions
+[ -s "/Users/maxtaylor/.bun/_bun" ] && source "/Users/maxtaylor/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"

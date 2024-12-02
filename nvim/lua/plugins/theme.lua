@@ -60,6 +60,7 @@ return {
 			-- 		}
 			-- 	end,
 			-- })
+			-- vim.cmd.colorscheme("tokyonight-day")
 			vim.cmd.colorscheme("tokyonight")
 
 			set_window_theme()

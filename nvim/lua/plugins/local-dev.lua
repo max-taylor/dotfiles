@@ -2,7 +2,6 @@ return {
 	{
 		"MunifTanjim/nui.nvim",
 		config = function()
-			require("extensions.git").setup()
 			require("extensions.figma").setup()
 		end,
 	},
