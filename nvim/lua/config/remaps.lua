@@ -54,3 +54,7 @@ vim.keymap.set("n", "xm", vim.diagnostic.open_float, { desc = "show diagnostic [
 vim.keymap.set("n", "xq", vim.diagnostic.setloclist, { desc = "Open diagnostic loclist" })
 -- Add the TSC keymaps
 vim.keymap.set("n", "xr", ":TSC<CR>", { desc = "TSC Run" })
+
+vim.keymap.set("n", "xx", function()
+	require("toggleterm").exec("!!\n", 1)
+end, { desc = "Run previous terminal command", noremap = true, silent = true })
