@@ -2,11 +2,6 @@ return {
 	{
 		"ggandor/leap.nvim",
 		enabled = true,
-		-- keys = {
-		-- 	{ "s", mode = { "n", "x", "o" }, desc = "Leap" },
-		-- 	-- { 'S', mode = { 'n', 'x', 'o' }, desc = 'Leap Backward to' },
-		-- 	{ "gs", mode = { "n", "x", "o" }, desc = "Leap from Windows" },
-		-- },
 		config = function(_, opts)
 			local leap = require("leap")
 			for k, v in pairs(opts) do
