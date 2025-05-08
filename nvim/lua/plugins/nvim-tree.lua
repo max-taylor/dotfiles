@@ -2,22 +2,24 @@ return {
 	{
 		"nvim-tree/nvim-tree.lua",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
-		config = function()
+		opts = {
+			update_focused_file = {
+				enable = true,
+			},
+			view = {
+				relativenumber = true,
+				number = true,
+				width = 60,
+				side = "left",
+			},
+			filters = {
+				dotfiles = false,
+			},
+		},
+		config = function(_, opts)
+			require("nvim-tree").setup(opts)
+
 			vim.keymap.set("n", "<leader>f", ":NvimTreeToggle<CR>", { silent = true })
-			require("nvim-tree").setup({
-				update_focused_file = {
-					enable = true,
-				},
-				view = {
-					relativenumber = true,
-					number = true,
-					width = 60,
-					side = "left",
-				},
-				filters = {
-					dotfiles = false,
-				},
-			})
 		end,
 	},
 	{

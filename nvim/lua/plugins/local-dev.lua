@@ -1,12 +1,7 @@
 return {
 	{
-		"MunifTanjim/nui.nvim",
-		config = function()
-			require("extensions.figma").setup()
-		end,
-	},
-	{
 		"kikito/middleclass",
+		enabled = false,
 		-- config = function()
 		-- 	-- Adding the plugin directory to the package path
 		-- 	local package_path_str = table.concat({
@@ -33,6 +28,7 @@ return {
 		dir = "~/Documents/Code/Neovim/plugin/",
 		name = "task-manager",
 		dependencies = { "MunifTanjim/nui.nvim", "rxi/json.lua", "kikito/middleclass" },
+		enabled = false,
 		config = function()
 			print("Setting up task-manager")
 			-- require("middleclass")

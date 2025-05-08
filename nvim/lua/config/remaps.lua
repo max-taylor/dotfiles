@@ -22,7 +22,7 @@ vim.keymap.set("n", "<C-k>", function()
 	navigate_wrap("k")
 end, { desc = "Move focus to the upper window (wrap)" })
 
--- Rebind <Tab> in insert mode to accept copilot suggestions if available
+-- copilot suggestions
 vim.keymap.set("i", "<C-l>", function()
 	if require("copilot.suggestion").is_visible() then
 		require("copilot.suggestion").accept()

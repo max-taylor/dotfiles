@@ -8,7 +8,7 @@ return {
 			shade_terminals = true,
 			insert_mappings = true,
 			persist_size = true,
-			size = 60,
+			size = 50,
 			direction = "vertical",
 			start_in_insert = true,
 			on_open = function(term)

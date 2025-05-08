@@ -7,11 +7,6 @@ vim.g.maplocalleader = " "
 -- Set to true if you have a Nerd Font installed
 vim.g.have_nerd_font = true
 
--- [[ Setting options ]]
--- See `:help vim.opt`
--- NOTE: You can change these options as you wish!
---  For more options, you can see `:help option-list`
-
 -- Make line numbers default
 vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
@@ -78,10 +73,6 @@ vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "CursorHoldI", "FocusGai
 	command = "if mode() != 'c' | checktime | endif",
 	pattern = { "*" },
 })
-
--- vim.opt.colorcolumn = "81" -- Line length marker at 81 columns
--- vim.opt.textwidth = 80 -- Wrap at 80 columns
--- vim.opt.linebreak = true -- Wrap on word boundary
 
 -- Highlight when yanking (copying) text
 --  Try it with `yap` in normal mode
