@@ -9,7 +9,7 @@ return {
 			view = {
 				relativenumber = true,
 				number = true,
-				width = 60,
+				width = 40,
 				side = "left",
 			},
 			filters = {
