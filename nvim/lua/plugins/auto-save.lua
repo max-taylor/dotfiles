@@ -10,7 +10,7 @@ return {
 			},
 			trigger_events = { "InsertLeave" },
 			write_all_buffers = true,
-			debounce_delay = 300,
+			debounce_delay = 600,
 		},
 	},
 }

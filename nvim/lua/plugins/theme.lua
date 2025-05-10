@@ -1,4 +1,16 @@
 return {
+	-- {
+	-- 	"sainnhe/everforest",
+	-- 	init = function()
+	-- 		-- vim.g.everforest_background = "soft"
+	-- 		-- vim.g.everforest_better_performance = 1
+	-- 		-- vim.g.everforest_enable_italic = 1
+	-- 		-- vim.g.everforest_diagnostic_virtual_text = "colored"
+	-- 		-- vim.g.everforest_diagnostic_virtual_text = "none"
+	-- 		vim.cmd.colorscheme("everforest")
+	-- 		vim.g.everforest_background = "hard"
+	-- 	end,
+	-- },
 	{
 		"folke/tokyonight.nvim",
 		lazy = false,
