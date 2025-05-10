@@ -1,4 +1,30 @@
 return {
+	-- { "mason-org/mason.nvim", "mason-org/mason-lspconfig.nvim", "neovim/nvim-lspconfig" },
+	-- {
+	-- 	"mason-org/mason-lspconfig.nvim",
+	-- 	enabled = false,
+	-- 	event = "BufReadPost",
+	-- 	dependencies = {
+	-- 		"mason-org/mason.nvim",
+	-- 		"neovim/nvim-lspconfig",
+	-- 	},
+	-- 	opts = {
+	-- 		ensure_installed = {
+	-- 			-- "lua_ls",
+	-- 			"ts_ls",
+	-- 			"jsonls",
+	-- 			"eslint",
+	-- 			-- "tailwindcss",
+	-- 			"astro",
+	-- 		},
+	-- 		automatic_installation = true,
+	-- 	},
+	-- 	config = function(_, opts)
+	-- 		require("mason").setup()
+	-- 		require("mason-lspconfig").setup(opts)
+	-- 		-- require("nvim-lspconfig").setup()
+	-- 	end,
+	-- },
 	{ -- Autoformat
 		"stevearc/conform.nvim",
 		opts = {
