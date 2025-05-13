@@ -12,9 +12,26 @@ return {
 	-- 	end,
 	-- },
 	{
+		"catppuccin/nvim",
+		name = "catppuccin",
+		priority = 1000,
+		enabled = false,
+		init = function()
+			vim.cmd.colorscheme("catppuccin-macchiato")
+		end,
+	},
+	{
+		"tiagovla/tokyodark.nvim",
+		init = function()
+			vim.cmd.colorscheme("tokyodark")
+		end,
+	},
+
+	{
 		"folke/tokyonight.nvim",
 		lazy = false,
 		priority = 1000,
+		enabled = false,
 		init = function()
 			-- vim.cmd.colorscheme("tokyonight-day")
 			vim.cmd.colorscheme("tokyonight")

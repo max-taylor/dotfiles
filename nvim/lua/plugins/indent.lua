@@ -5,9 +5,12 @@ return {
 		-- Enable `lukas-reineke/indent-blankline.nvim`
 		-- See `:help ibl`
 		main = "ibl",
-		opts = {},
+		opts = {
+			indent = { char = "|" },
+			scope = { enabled = true },
+		},
 	},
 	{
 		"tpope/vim-sleuth", -- Detect tabstop and shiftwidth automatically
-	}
+	},
 }

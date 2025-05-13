@@ -205,7 +205,15 @@ return {
 
 					map("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
 
-					map("K", vim.lsp.buf.hover, "Hover Documentation")
+					-- vim.keymap.set("n", "K", function()
+					-- 	print("NEW DOC")
+					-- 	vim.lsp.buf.hover({ border = "single", max_height = 100, max_width = 120 })
+					-- end, { buffer = event.buf, desc = "LSP: Hover Documentation" })
+
+					map("K", function()
+						-- TODO: Not working
+						vim.lsp.buf.hover({ border = "single", max_height = 25, max_width = 120 })
+					end, "Hover Documentation")
 
 					map("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
 
