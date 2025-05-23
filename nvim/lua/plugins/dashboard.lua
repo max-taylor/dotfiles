@@ -6,9 +6,11 @@ return {
 		local dashboard = require("alpha.themes.dashboard")
 		local ascii = require("ascii")
 
-		dashboard.section.header.val = ascii.art.misc.krakens.krakedking
-		-- dashboard.section.header.val = ascii.art.misc.skulls.angryskull
-		-- dashboard.section.buttons.val = {}
+		dashboard.section.header.val = ascii.art.text.neovim.sharp
+		dashboard.section.buttons.val = {}
+		-- dashboard.section.buttons.val = { type = "text", val = "hey" }
+
+		dashboard.section.footer.val = ascii.art.misc.krakens.krakedking
 
 		alpha.setup(dashboard.config)
 		-- require("alpha").setup(require("alpha.themes.dashboard").config)

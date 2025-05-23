@@ -22,6 +22,7 @@ return {
 	},
 	{
 		"tiagovla/tokyodark.nvim",
+		enabled = true,
 		init = function()
 			vim.cmd.colorscheme("tokyodark")
 		end,
@@ -33,8 +34,8 @@ return {
 		priority = 1000,
 		enabled = false,
 		init = function()
-			-- vim.cmd.colorscheme("tokyonight-day")
-			vim.cmd.colorscheme("tokyonight")
+			vim.cmd.colorscheme("tokyonight-day")
+			-- vim.cmd.colorscheme("tokyonight")
 
 			vim.api.nvim_set_hl(0, "WinSeparator", { fg = "#BE90D4", bold = true })
 

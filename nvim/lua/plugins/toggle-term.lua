@@ -8,7 +8,13 @@ return {
 			shade_terminals = true,
 			insert_mappings = true,
 			persist_size = true,
-			size = 40,
+			size = function(term)
+				if term.direction == "horizontal" then
+					return 20
+				elseif term.direction == "vertical" then
+					return 40
+				end
+			end,
 			direction = "vertical",
 			start_in_insert = true,
 			on_open = function(term)
