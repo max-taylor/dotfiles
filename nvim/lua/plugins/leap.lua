@@ -13,6 +13,9 @@ return {
 			-- 	-- leap.add_default_mappings(true)
 			vim.keymap.set({ "n", "x", "o" }, "s", "<Plug>(leap)")
 			vim.keymap.set({ "n", "x", "o" }, "S", "<Plug>(leap-from-window)")
+
+			-- Sets the text color when leaping to the Comment text color
+			vim.api.nvim_set_hl(0, "LeapBackdrop", { link = "Comment" })
 		end,
 	},
 }

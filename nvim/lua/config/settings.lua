@@ -69,6 +69,9 @@ vim.opt.hlsearch = true
 -- Auto reload files https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/383044#383044
 vim.o.autoread = true
 
+-- Disable swapfile
+vim.opt.swapfile = false
+
 vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "CursorHoldI", "FocusGained" }, {
 	command = "if mode() != 'c' | checktime | endif",
 	pattern = { "*" },

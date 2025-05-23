@@ -188,6 +188,9 @@ return {
 					end
 
 					map("gd", require("telescope.builtin").lsp_definitions, "[G]oto [D]efinition")
+					map("gv", function()
+						require("telescope.builtin").lsp_definitions({ jump_type = "vsplit" })
+					end, "[G]oto [D]efinition (vsplit)")
 
 					map("gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
 
