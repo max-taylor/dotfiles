@@ -4,9 +4,16 @@
 export DOTFILES="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Kitty
-rm -rf $HOME/.config/kitty
-mkdir -p $HOME/.config/kitty
-ln -snf $DOTFILES/kitty/* $HOME/.config/kitty
+# rm -rf $HOME/.config/kitty
+# mkdir -p $HOME/.config/kitty
+# ln -snf $DOTFILES/kitty/* $HOME/.config/kitty
+
+# TODO: Symlink the entire directory so we can create local files
+rm -rf $HOME/.config/wezterm
+mkdir -p $HOME/.config/wezterm
+# Symlink the wezterm config file
+ln -snf $DOTFILES/wezterm/* $HOME/.config/wezterm
+# ln -sf $DOTFILES/wezterm/.wezterm.lua $HOME/.wezterm.lua
 
 # ZSH
 
