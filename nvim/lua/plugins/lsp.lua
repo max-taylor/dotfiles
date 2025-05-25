@@ -53,6 +53,7 @@ return {
             },
             formatters = {
                 stylua = {
+                    -- TODO: It probably would be better to create a `stylua.toml` file in the root, but leaving it for now
                     prepend_args = function(self, ctx)
                         return { "--indent-width", 4, "--indent-type", "Spaces" }
                     end,
@@ -162,6 +163,7 @@ return {
                     --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
                 }),
                 sources = {
+                    { name = "lazydev" },
                     { name = "nvim_lsp" },
                     { name = "luasnip" },
                     { name = "path" },
@@ -181,9 +183,17 @@ return {
             -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
             { "j-hui/fidget.nvim", opts = {} },
 
-            -- `neodev` configures Lua LSP for your Neovim config, runtime and plugins
-            -- used for completion, annotations and signatures of Neovim apis
-            { "folke/neodev.nvim", opts = {} },
+            {
+                "folke/lazydev.nvim",
+                ft = "lua", -- only load on lua files
+                opts = {
+                    -- library = {
+                    --     -- See the configuration section for more details
+                    --     -- Load luvit types when the `vim.uv` word is found
+                    --     { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+                    -- },
+                },
+            },
         },
         config = function()
             --  This function gets run when an LSP attaches to a particular buffer.
@@ -263,13 +273,6 @@ return {
                     -- capabilities = {},
                     settings = {
                         Lua = {
-                            format = {
-                                enable = true,
-                                defaultConfig = {
-                                    indent = 2,
-                                    tabWidth = 2,
-                                },
-                            },
                             completion = {
                                 callSnippet = "Replace",
                             },
