@@ -1,32 +1,27 @@
 -- Pull in the wezterm API
 local wezterm = require("wezterm")
 -- Import our new module (put this near the top of your wezterm.lua)
--- local appearance = require("appearance")
+local appearance = require("appearance")
+local projects = require("projects")
 
 -- This will hold the configuration.
 local config = wezterm.config_builder()
 
 -- Use it!
--- if appearance.is_dark() then
---     config.color_scheme = "Tokyo Night"
--- else
---     config.color_scheme = "Tokyo Night Day"
--- end
+if appearance.is_dark() then
+    config.color_scheme = "Tokyo Night"
+else
+    config.color_scheme = "Tokyo Night Day"
+end
 
--- This is where you actually apply your config choices.
+-- config.color_scheme = "Tokyo Night"
 
--- For example, changing the initial geometry for new windows:
 config.initial_cols = 120
 config.initial_rows = 28
 
--- or, changing the font size and color scheme.
 config.font_size = 13
--- config.color_scheme = "AdventureTime"
--- Pick a colour scheme. WezTerm ships with more than 1,000!
--- Find them here: https://wezfurlong.org/wezterm/colorschemes/index.html
-config.color_scheme = "Tokyo Night"
 
-config.font = wezterm.font("JetBrains Mono")
+config.font = wezterm.font("JetBrains Mono", { weight = "Bold" })
 
 config.native_macos_fullscreen_mode = true
 
@@ -78,12 +73,29 @@ wezterm.on("update-status", function(window)
     }))
 end)
 
+for i = 1, 9 do
+    table.insert(config.keys, {
+        key = tostring(i),
+        mods = "LEADER",
+        action = wezterm.action_callback(function(window, pane)
+            projects.switch_by_id(i, window, pane)
+        end),
+    })
+end
+
+config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 1000 }
+
 config.keys = {
+    {
+        key = "f",
+        mods = "LEADER",
+        action = projects.choose_project(),
+    },
     -- { key = "h", mods = "CTRL", action = wezterm.action.ActivatePaneDirection("Left") },
     -- { key = "j", mods = "CTRL", action = wezterm.action.ActivatePaneDirection("Down") },
     -- { key = "k", mods = "CTRL", action = wezterm.action.ActivatePaneDirection("Up") },
     -- { key = "l", mods = "CTRL", action = wezterm.action.ActivatePaneDirection("Right") },
-    { key = "q", mods = "CTRL", action = wezterm.action.CloseCurrentPane({ confirm = false }) },
+    -- { key = "q", mods = "CTRL", action = wezterm.action.CloseCurrentPane({ confirm = false }) },
     { key = "f", mods = "CTRL|CMD", action = wezterm.action.ToggleFullScreen },
 }
 
