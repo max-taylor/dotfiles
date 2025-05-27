@@ -10,11 +10,24 @@ export DOTFILES="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # TODO: Symlink the entire directory so we can create local files
 rm -rf $HOME/.config/wezterm
-# ln -snf $DOTFILES/wezterm/* $HOME/.config/wezterm
+# ln -snf $DOTFILES/terminal $HOME/.config/wezterm
+
 mkdir -p $HOME/.config/wezterm
+# ln -snf $DOTFILES/terminal $HOME/.config/wezterm
+# ln -snf $DOTFILES/terminal/.wezterm.lua ~/.config/wezterm/wezterm.lua
+
+for file in "$DOTFILES/terminal"/*; do
+  ln -snf "$file" "$HOME/.config/wezterm/$(basename "$file")"
+done
+
+# ln -snf $DOTFILES/terminal/* $HOME/.config/wezterm
+# ln -snf $DOTFILES/terminal/.wezterm.lua ~/.config/wezterm/wezterm.lua
+
+
 # Symlink the wezterm config file
-ln -snf $DOTFILES/wezterm/* $HOME/.config/wezterm
 # ln -sf $DOTFILES/wezterm/.wezterm.lua $HOME/.wezterm.lua
+
+
 
 # ZSH
 

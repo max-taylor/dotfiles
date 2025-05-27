@@ -1,25 +1,7 @@
-local wezterm = require("wezterm")
+local wezterm = require("wezterm") --[[@as Wezterm]]
 local module = {}
 
-local function h(path)
-    if not path then
-        return wezterm.home_dir
-    end
-    return wezterm.home_dir .. "/" .. path
-end
-
-local function project_dirs()
-    local dirs = { h("Documents/Code*") }
-    local projects = { h(), h("dotfiles") }
-    for _, dir in ipairs(dirs) do
-        for _, p in ipairs(wezterm.glob(dir)) do
-            table.insert(projects, p)
-        end
-    end
-    return projects
-end
-
-function module.list_for_display()
+function workspace_list()
     local active = wezterm.mux.get_active_workspace()
     local workspaces = wezterm.mux.get_workspace_names()
 
@@ -43,18 +25,9 @@ function module.list_for_display()
     return projects
 end
 
-function module.switch_by_id(id, window, pane)
-    local workspaces = wezterm.mux.get_workspace_names()
-    local workspace = workspaces[id]
-    if not workspace then
-        return
-    end
-    window:perform_action(wezterm.action.SwitchToWorkspace({ name = workspace }), pane)
-end
-
 function module.choose_project()
     local choices = {}
-    for _, value in ipairs(project_dirs()) do
+    for _, value in ipairs(workspace_list()) do
         table.insert(choices, { label = value })
     end
 
