@@ -2,7 +2,6 @@
 local wezterm = require("wezterm") --[[@as Wezterm]]
 -- Import our new module (put this near the top of your wezterm.lua)
 local appearance = require("appearance")
-local projects = require("projects")
 local workspaces = require("workspaces")
 
 -- This will hold the configuration.
@@ -115,23 +114,13 @@ wezterm.on("update-status", function(window, _)
     window:set_right_status(wezterm.format(elements))
 end)
 
--- for i = 1, 9 do
---     table.insert(config.keys, {
---         key = tostring(i),
---         mods = "LEADER",
---         action = wezterm.action_callback(function(window, pane)
---             projects.switch_by_id(i, window, pane)
---         end),
---     })
--- end
-
 config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 1000 }
 
 config.keys = {
     {
         key = "f",
         mods = "LEADER",
-        action = projects.choose_project(),
+        action = workspaces.choose_workspace(),
     },
     {
         key = "r",
