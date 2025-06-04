@@ -1,4 +1,5 @@
 -- Pull in the wezterm API
+
 local wezterm = require("wezterm") --[[@as Wezterm]]
 -- Import our new module (put this near the top of your wezterm.lua)
 local appearance = require("appearance")
@@ -117,10 +118,52 @@ end)
 config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 1000 }
 
 config.keys = {
+    -- {
+    --     key = "+",
+    --     mods = "CTRL",
+    --     action = wezterm.action_callback(function(window, pane)
+    --         local overrides = window:get_config_overrides() or {}
+    --         overrides.font_size = (overrides.font_size or 12.0) + 0.5
+    --         window:set_config_overrides(overrides)
+    --     end),
+    -- },
+    -- {
+    --     key = "-",
+    --     mods = "CTRL",
+    --     action = wezterm.action_callback(function(window, pane)
+    --         local overrides = window:get_config_overrides() or {}
+    --         overrides.font_size = (overrides.font_size or 12.0) - 0.5
+    --         window:set_config_overrides(overrides)
+    --     end),
+    -- },
     {
-        key = "f",
-        mods = "LEADER",
+        key = "n",
+        mods = "CTRL",
         action = workspaces.choose_workspace(),
+    },
+    {
+        key = "c",
+        mods = "LEADER",
+        action = wezterm.action.PromptInputLine({
+            description = wezterm.format({
+                { Attribute = { Intensity = "Bold" } },
+                { Foreground = { AnsiColor = "Fuchsia" } },
+                { Text = "Enter name for new workspace" },
+            }),
+            action = wezterm.action_callback(function(window, pane, line)
+                -- line will be `nil` if they hit escape without entering anything
+                -- An empty string if they just hit enter
+                -- Or the actual line of text they wrote
+                if line then
+                    window:perform_action(
+                        wezterm.action.SwitchToWorkspace({
+                            name = line,
+                        }),
+                        pane
+                    )
+                end
+            end),
+        }),
     },
     {
         key = "r",
