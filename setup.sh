@@ -42,6 +42,16 @@ rm -rf $HOME/.config/nvim
 mkdir -p $HOME/.config/nvim
 ln -snf $DOTFILES/nvim/* $HOME/.config/nvim
 
+# Symlink with no extension
+for script in "$DOTFILES/bash/"*; do
+  name="$(basename "$script" .zsh)"  # strip .zsh
+  target="/usr/local/bin/$name"
+  ln -snf "$script" "$target"
+  chmod +x "$script"
+done
+
+
+
 # # MacOS applications
 # if [[ $OSTYPE == "darwin"* ]]; then
 #   . "$DOTFILES/install/brew-cask.sh"
