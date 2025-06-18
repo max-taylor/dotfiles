@@ -18,6 +18,10 @@ return {
         -- dashboard.section.footer.val = ascii.art.misc.skulls.threeskulls_big_v1
 
         dashboard.section.footer.val = ascii.art.misc.krakens.krakedking
+        dashboard.section.footer.opts.hl = "AlphaFooter"
+
+        -- Create custom red highlight group for footer
+        vim.api.nvim_set_hl(0, "AlphaFooter", { fg = "#FF2800" })
 
         alpha.setup(dashboard.config)
         -- require("alpha").setup(require("alpha.themes.dashboard").config)

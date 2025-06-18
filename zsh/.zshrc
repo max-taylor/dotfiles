@@ -143,3 +143,4 @@ export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+alias claude="/Users/maxtaylor/.claude/local/claude"
