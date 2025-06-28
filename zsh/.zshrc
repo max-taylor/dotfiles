@@ -144,3 +144,165 @@ export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 alias claude="/Users/maxtaylor/.claude/local/claude"
+
+# Claude Code Feature Branch Support
+# ==================================
+
+# Configuration
+export CLAUDE_CMD="claude"  # Update this to match your actual command
+export DEFAULT_BASE_BRANCH="main"
+
+# Ensure ~/bin is in PATH (or wherever you put the script)
+export PATH="$HOME/bin:$PATH"
+
+# Main function
+cf() {
+    claude-feature "$@"
+}
+
+# Quick feature branch with Claude
+cff() {
+    # Even quicker - just type: cff implement new feature
+    claude-feature "$*"
+}
+
+# List all Claude worktrees
+cfl() {
+    echo "📁 Active Claude worktrees:"
+    echo ""
+    
+    # Find all directories in parent that match pattern repo-name-*
+    local current_repo=$(basename "$(git rev-parse --show-toplevel 2>/dev/null)")
+    local parent_dir=$(dirname "$(git rev-parse --show-toplevel 2>/dev/null)")
+    
+    if [[ -z "$current_repo" ]]; then
+        echo "Not in a git repository"
+        return 1
+    fi
+    
+    # Look for worktree directories matching any repo pattern
+    find "$parent_dir" -maxdepth 1 -type d -name "*-*" | while read -r dir; do
+        if [[ -f "$dir/.git" ]] && [[ -f "$dir/.claude-task" ]]; then
+            local dirname=$(basename "$dir")
+            local repo_part="${dirname%%-*}"
+            local branch_part="${dirname#*-}"
+            local task=$(cat "$dir/.claude-task" 2>/dev/null)
+            
+            # Check if there are uncommitted changes
+            cd "$dir" 2>/dev/null && {
+                if [[ -n $(git status --porcelain 2>/dev/null) ]]; then
+                    status="🔴"  # Has changes
+                else
+                    status="🟢"  # Clean
+                fi
+                cd - > /dev/null
+            }
+            
+            printf "%s %-20s %-30s %s\n" "$status" "$repo_part" "$branch_part" "$task"
+        fi
+    done
+}
+
+# Go to a Claude worktree
+cfg() {
+    if [[ -z "$1" ]]; then
+        echo "Usage: cfg <branch-name-part>"
+        echo "Available worktrees:"
+        cfl
+        return 1
+    fi
+    
+    local parent_dir=$(dirname "$(git rev-parse --show-toplevel 2>/dev/null)")
+    
+    # Find matching worktree
+    local matches=$(find "$parent_dir" -maxdepth 1 -type d -name "*-*$1*" 2>/dev/null | grep -E "\-[^/]*$1")
+    local count=$(echo "$matches" | grep -c . || echo 0)
+    
+    if [[ $count -eq 0 ]]; then
+        echo "No worktree found matching: $1"
+        return 1
+    elif [[ $count -eq 1 ]]; then
+        cd "$matches"
+        echo "Changed to: $matches"
+        echo "Task: $(cat .claude-task 2>/dev/null || echo 'No task description')"
+    else
+        echo "Multiple matches found:"
+        echo "$matches" | while read -r match; do
+            echo "  - $(basename "$match"): $(cat "$match/.claude-task" 2>/dev/null)"
+        done
+        return 1
+    fi
+}
+
+# Clean up a Claude worktree
+cfc() {
+    if [[ -z "$1" ]]; then
+        echo "Usage: cfc <branch-name-part>"
+        echo "This will remove the worktree after checking for uncommitted changes"
+        return 1
+    fi
+    
+    local parent_dir=$(dirname "$(git rev-parse --show-toplevel 2>/dev/null)")
+    
+    # Find matching worktree
+    local worktree=$(find "$parent_dir" -maxdepth 1 -type d -name "*-*$1*" 2>/dev/null | grep -E "\-[^/]*$1" | head -1)
+    
+    if [[ -z "$worktree" ]]; then
+        echo "No worktree found matching: $1"
+        return 1
+    fi
+    
+    echo "Found worktree: $worktree"
+    
+    # Check for uncommitted changes
+    if [[ -n $(cd "$worktree" && git status --porcelain 2>/dev/null) ]]; then
+        echo "⚠️  Warning: Uncommitted changes detected!"
+        echo "Continue anyway? (y/N)"
+        read -r response
+        if [[ ! "$response" =~ ^[Yy]$ ]]; then
+            return 1
+        fi
+    fi
+    
+    # Get the main repo path
+    local main_repo=$(cat "$worktree/.claude-main-repo" 2>/dev/null)
+    
+    if [[ -z "$main_repo" ]]; then
+        # Fallback: try to find main repo from worktree list
+        main_repo=$(cd "$worktree" && git worktree list | grep -v "$worktree" | head -1 | awk '{print $1}')
+    fi
+    
+    # Remove worktree
+    echo "Removing worktree..."
+    (cd "$main_repo" && git worktree remove "$worktree" --force)
+    
+    echo "✅ Worktree removed"
+}
+
+# Go back to main repository from any worktree
+cfm() {
+    if [[ -f ".claude-main-repo" ]]; then
+        local main_repo=$(cat .claude-main-repo)
+        cd "$main_repo"
+        echo "Changed to main repository: $main_repo"
+    else
+        echo "Not in a Claude worktree (no .claude-main-repo file found)"
+        return 1
+    fi
+}
+
+# Aliases for common workflows
+alias cfa='claude-feature'                    # Full command
+alias cfn='claude-feature --no-claude'        # Create worktree without starting Claude
+alias cfb='claude-feature --base'             # Specify base branch
+alias cfd='claude-feature --base develop'     # Quick develop branch
+
+# Auto-completion for cfg and cfc
+_claude_worktree_complete() {
+    local parent_dir=$(dirname "$(git rev-parse --show-toplevel 2>/dev/null)")
+    local branches=$(find "$parent_dir" -maxdepth 1 -type d -name "*-*" -exec basename {} \; 2>/dev/null | sed 's/^[^-]*-//')
+    _arguments "1:branch:($branches)"
+}
+
+compdef _claude_worktree_complete cfg
+compdef _claude_worktree_complete cfc
