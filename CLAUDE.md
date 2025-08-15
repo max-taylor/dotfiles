@@ -41,6 +41,19 @@ The setup script creates symlinks for all configurations to their expected locat
 
 ## Development Commands
 
+### Setup and Installation
+- Initial setup: `./setup.sh` - Creates symlinks for all configurations
+- Symlinks bash scripts to `/usr/local/bin/` for global access
+
+### Workflow Scripts (Available globally after setup)
+- `claude-feature "task description"` - Create feature branch with git worktree and start Claude Code
+  - Options: `-b` (base branch), `-n` (no Claude), `-c` (Claude args), `-p` (branch prefix)
+  - Creates worktree in parent directory with naming pattern: `repo-name-branch-name`
+  - Generates `.claude-prompt.md` with task context and implementation guide
+- `restart-claude` - Kill and restart Claude Code process
+- `delete_node_modules` - Recursively find and delete node_modules directories
+- `kill_port <port>` - Kill process running on specified port
+
 ### Neovim
 - Launch with: `nvim`
 - Plugin management: `:Lazy` (view/update plugins)

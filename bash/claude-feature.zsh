@@ -177,40 +177,6 @@ else
     print_success "Worktree created at: $WORKTREE_PATH"
 fi
 
-# Create implementation script in worktree
-print_step "Creating implementation script..."
-cat > "$WORKTREE_PATH/.claude-implement.sh" << 'SCRIPT'
-#!/usr/bin/env bash
-# Auto-generated implementation script
-
-TASK_DESCRIPTION="$1"
-
-echo "📋 Task: $TASK_DESCRIPTION"
-echo "🌳 Branch: $(git branch --show-current)"
-echo ""
-echo "Ready to implement the task!"
-echo ""
-echo "You can now use Claude Code to:"
-echo "1. Analyze the codebase"
-echo "2. Implement the required changes"
-echo "3. Run tests and quality checks"
-echo "4. Commit and push changes"
-echo "5. Create a pull request"
-echo ""
-echo "Useful commands:"
-echo "  pnpm install    # Install dependencies"
-echo "  pnpm lint       # Run linting"
-echo "  pnpm test       # Run tests"
-echo "  pnpm build      # Build the project"
-echo ""
-echo "When done:"
-echo "  git add ."
-echo "  git commit -m 'feat: your commit message'"
-echo "  git push -u origin $(git branch --show-current)"
-echo "  gh pr create"
-SCRIPT
-
-chmod +x "$WORKTREE_PATH/.claude-implement.sh"
 
 # Save task description for later reference
 echo "$TASK_DESCRIPTION" > "$WORKTREE_PATH/.claude-task"
@@ -234,6 +200,7 @@ I need help implementing this feature. Please:
 3. Implement the changes following the project's patterns and conventions
 4. Ensure all tests pass and linting is clean
 5. Create appropriate commits with conventional commit messages
+6. When the feature is complete, push the changes to the remote branch and create a pull request
 
 The task description is: $TASK_DESCRIPTION
 
