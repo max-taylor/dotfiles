@@ -59,10 +59,43 @@ vim.keymap.set("n", "xx", function()
     require("toggleterm").exec("!!\n", 1)
 end, { desc = "Run previous terminal command", noremap = true, silent = true })
 
--- Copy line reference (<leader>cp)
-vim.keymap.set("n", "xc", function()
+-- Helper function to get current file path and line
+local function get_file_line_reference()
     local file = vim.fn.expand("%")
     local line = vim.fn.line(".")
-    local ref = string.format("%s#L%d", file, line)
+    return file, line, string.format("%s#L%d", file, line)
+end
+
+-- Copy line reference (<leader>cp)
+vim.keymap.set("n", "xc", function()
+    local _, _, ref = get_file_line_reference()
     vim.fn.setreg("+", ref)
+    vim.notify("File path and position copied to clipboard", vim.log.levels.INFO)
 end, { desc = "Copy line reference (file:line)", noremap = true, silent = true })
+
+-- Copy diagnostics for Claude Code
+vim.keymap.set("n", "xd", function()
+    local file, line, _ = get_file_line_reference()
+    local diagnostics = vim.diagnostic.get(0, { lnum = line - 1 })
+
+    if #diagnostics == 0 then
+        vim.notify("No diagnostics on current line", vim.log.levels.INFO)
+        return
+    end
+
+    local diagnostic_text = {}
+    table.insert(diagnostic_text, "Investigate and resolve the following issue:")
+    table.insert(diagnostic_text, "")
+    table.insert(diagnostic_text, string.format("File: %s:%d", file, line))
+    table.insert(diagnostic_text, "")
+    table.insert(diagnostic_text, "Diagnostics:")
+
+    for _, diagnostic in ipairs(diagnostics) do
+        local severity = vim.diagnostic.severity[diagnostic.severity]
+        table.insert(diagnostic_text, string.format("- %s: %s", severity, diagnostic.message))
+    end
+
+    local result = table.concat(diagnostic_text, "\n")
+    vim.fn.setreg("+", result)
+    vim.notify("Diagnostics copied to clipboard", vim.log.levels.INFO)
+end, { desc = "Copy diagnostics for Claude Code", noremap = true, silent = true })
