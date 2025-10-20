@@ -1,0 +1,19 @@
+[workspace-to-monitor-force-assignment]
+	1 = 'terminal'
+	2 = 'arc'
+	3 = 'obsidian'
+	4 = 'communication'
+	5 = 'music'
+
+[mode.main.binding]
+	alt-t = 'workspace terminal'
+	alt-a = 'workspace arc'
+	alt-o = 'workspace obsidian'
+	alt-c = 'workspace communication'
+	alt-m = 'workspace music'
+ 
+	alt-shift-t = 'move-node-to-workspace terminal'
+	alt-shift-a = 'move-node-to-workspace arc'
+	alt-shift-o = 'move-node-to-workspace obsidian'
+	alt-shift-c = 'move-node-to-workspace communication'
+	alt-shift-m = 'move-node-to-workspace music'

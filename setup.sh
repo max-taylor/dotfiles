@@ -27,6 +27,8 @@ done
 # sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 ln -sf $DOTFILES/zsh/.zshrc $HOME/.zshrc
 
+ln -sf $DOTFILES/aerospace/aerospace.toml $HOME/.aerospace.toml
+
 # Tmux
 # Detect if already installed and skip installing tpm if so
 if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then

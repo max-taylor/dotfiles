@@ -152,3 +152,5 @@ cff() {
     # Even quicker - just type: cff implement new feature
     claude-feature "$*"
 }
+
+alias claude="/Users/maxtaylor/.claude/local/claude"
