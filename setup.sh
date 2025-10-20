@@ -5,8 +5,6 @@ export DOTFILES="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 rm -rf $HOME/.config/wezterm
 mkdir -p $HOME/.config/wezterm
-# ln -snf $DOTFILES/terminal $HOME/.config/wezterm
-# ln -snf $DOTFILES/terminal/.wezterm.lua ~/.config/wezterm/wezterm.lua
 
 for file in "$DOTFILES/terminal"/*; do
   ln -snf "$file" "$HOME/.config/wezterm/$(basename "$file")"
@@ -20,7 +18,6 @@ done
 # ln -sf $DOTFILES/wezterm/.wezterm.lua $HOME/.wezterm.lua
 
 
-
 # ZSH
 
 # # Install oh-my-zsh
@@ -28,6 +25,15 @@ done
 ln -sf $DOTFILES/zsh/.zshrc $HOME/.zshrc
 
 ln -sf $DOTFILES/aerospace/aerospace.toml $HOME/.aerospace.toml
+
+rm -rf $HOME/.config
+mkdir -p $HOME/.config/sketchybar/plugins/
+
+ln -sf $DOTFILES/sketchybar/sketchybarrc $HOME/.config/sketchybar/sketchybarrc
+
+for file in "$DOTFILES/sketchybar/plugins/"*; do
+  ln -snf "$file" "$HOME/.config/sketchybar/plugins/$(basename "$file")"
+done
 
 # Tmux
 # Detect if already installed and skip installing tpm if so

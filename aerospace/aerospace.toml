@@ -1,3 +1,25 @@
+# Run Sketchybar together with AeroSpace
+# sketchbar has a built-in detection of already running process,
+# so it won't be run twice on AeroSpace restart
+after-startup-command = ['exec-and-forget sketchybar']
+
+# Notify Sketchybar about workspace change
+exec-on-workspace-change = ['/bin/bash', '-c',
+    'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE'
+]
+
+[gaps]
+inner.horizontal = 15
+inner.vertical = 15
+outer.bottom = 15
+outer.top = [
+  { monitor."built-in" = 10 },
+  { monitor."main" = 50 },
+  50
+]
+outer.left = 15
+outer.right = 15
+
 [workspace-to-monitor-force-assignment]
 	1 = 'terminal'
 	2 = 'web'
