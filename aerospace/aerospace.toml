@@ -14,7 +14,7 @@ inner.vertical = 15
 outer.bottom = 15
 outer.top = [
   { monitor."built-in" = 20 },
-  { monitor."main" = 50 },
+  { monitor."main" = 40 },
   50
 ]
 outer.left = 15
