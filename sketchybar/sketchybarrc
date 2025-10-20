@@ -82,16 +82,14 @@ space_settings=(
 )
 
 ##### Adding Mission Control Space Indicators #####
-
-for sid in $(aerospace list-workspaces --all); do
-    sketchybar --add item space.$sid left \
-        --subscribe space.$sid aerospace_workspace_change \
-        --set space.$sid \
-	label="$sid" \
+sketchybar --add item terminal left \
+	--subscribe terminal aerospace_workspace_change \
+        --set terminal \
+	--set code icon= \
+	label="terminal" \
 	"${space_settings[@]}" \
-        click_script="aerospace workspace $sid" \
-        script="$CONFIG_DIR/plugins/aerospace.sh $sid"
-done
+        click_script="aerospace workspace terminal" \
+        script="$CONFIG_DIR/plugins/aerospace.sh terminal"
 
 ##### Force all scripts to run the first time (never do this in a script) #####
 sketchybar --update
