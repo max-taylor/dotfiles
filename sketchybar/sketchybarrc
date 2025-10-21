@@ -1,108 +1,24 @@
-# This is a demo config to showcase some of the most important commands.
-# It is meant to be changed and configured, as it is intentionally kept sparse.
-# For a (much) more advanced configuration example see my dotfiles:
-# https://github.com/FelixKratz/dotfiles
+#!/usr/bin/env lua
 
-PLUGIN_DIR="$CONFIG_DIR/plugins"
+-- This is only needed once to install the sketchybar module
+-- (or for an update of the module)
+os.execute("[ ! -d $HOME/.local/share/sketchybar_lua/ ] && (git clone https://github.com/FelixKratz/SbarLua.git /tmp/SbarLua && cd /tmp/SbarLua/ && make install && rm -rf /tmp/SbarLua/)")
 
-##### Bar Appearance #####
-# Configuring the general appearance of the bar.
-# These are only some of the options available. For all options see:
-# https://felixkratz.github.io/SketchyBar/config/bar
-# If you are looking for other colors, see the color picker:
-# https://felixkratz.github.io/SketchyBar/config/tricks#color-picker
+-- Add the sketchybar module to the package cpath (the module could be
+-- installed into the default search path then this would not be needed)
+package.cpath = package.cpath .. ";/Users/" .. os.getenv("USER") .. "/.local/share/sketchybar_lua/?.so"
 
-sketchybar --bar position=top height=40 blur_radius=30 color=0x40000000
+-- Require the sketchybar module
+sbar = require("sketchybar")
 
-##### Changing Defaults #####
-# We now change some default values, which are applied to all further items.
-# For a full list of all available item properties see:
-# https://felixkratz.github.io/SketchyBar/config/items
+-- Bundle the entire initial configuration into a single message to sketchybar
+-- This improves startup times drastically, try removing both the begin and end
+-- config calls to see the difference -- yeah..
+sbar.begin_config()
+require("init")
+sbar.hotload(true)
+sbar.end_config()
 
-default=(
-  padding_left=5
-  padding_right=5
-  icon.font="Hack Nerd Font:Bold:17.0"
-  label.font="Hack Nerd Font:Bold:14.0"
-  icon.color=0xffffffff
-  label.color=0xffffffff
-  icon.padding_left=4
-  icon.padding_right=4
-  label.padding_left=4
-  label.padding_right=4
-)
-sketchybar --default "${default[@]}"
-
-
-##### Adding Left Items #####
-# We add some regular items to the left side of the bar, where
-# only the properties deviating from the current defaults need to be set
-
-sketchybar --add event aerospace_workspace_change
-
-space_settings=(
-    icon.font="Hack Nerd Font:Bold:15.0"
-    label.font="Hack Nerd Font:Bold:12.0"
-    icon.color=0xfff6710f
-    label.color=0xffffffff
-    icon.padding_left=6
-    icon.padding_right=6
-    icon.padding_top=2
-    icon.padding_bottom=2
-    label.padding_left=6
-    label.padding_right=0
-    background.color=0x44ffffff
-    background.corner_radius=5
-    background.height=20
-    background.drawing=off
-)
-
-##### Adding Mission Control Space Indicators #####
-
-# Space configurations
-SPACE_NAMES=("terminal" "web" "obsidian" "communication" "music" "bot")
-SPACE_ICONS=("" "" "󰏢" "" "" "")
-
-# Create spaces
-for i in "${!SPACE_NAMES[@]}"; do
-	space_name="${SPACE_NAMES[i]}"
-	space_icon="${SPACE_ICONS[i]}"
-	
-	sketchybar --add item "$space_name" left \
-		--subscribe "$space_name" aerospace_workspace_change \
-		--set "$space_name" \
-		icon="$space_icon" \
-		label.drawing=off \
-		"${space_settings[@]}" \
-		click_script="aerospace workspace $space_name" \
-		script="$CONFIG_DIR/plugins/aerospace.sh $space_name"
-done
-
-sketchybar --add item chevron left \
-           --set chevron icon= label.drawing=off \
-           --add item front_app left \
-           --set front_app icon.drawing=off script="$PLUGIN_DIR/front_app.sh" \
-           --subscribe front_app front_app_switched
-
-##### Adding Right Items #####
-# In the same way as the left items we can add items to the right side.
-# Additional position (e.g. center) are available, see:
-# https://felixkratz.github.io/SketchyBar/config/items#adding-items-to-sketchybar
-
-# Some items refresh on a fixed cycle, e.g. the clock runs its script once
-# every 10s. Other items respond to events they subscribe to, e.g. the
-# volume.sh script is only executed once an actual change in system audio
-# volume is registered. More info about the event system can be found here:
-# https://felixkratz.github.io/SketchyBar/config/events
-
-sketchybar --add item clock right \
-           --set clock update_freq=10 icon=  script="$PLUGIN_DIR/clock.sh" \
-           --add item volume right \
-           --set volume script="$PLUGIN_DIR/volume.sh" \
-           --subscribe volume volume_change \
-           --add item battery right \
-           --set battery update_freq=120 script="$PLUGIN_DIR/battery.sh" \
-           --subscribe battery system_woke power_source_change
-
-##### Force all scripts to run the first time (never do this in a script) #####
-sketchybar --update
+-- Run the event loop of the sketchybar module (without this there will be no
+-- callback functions executed in the lua module)
+sbar.event_loop()

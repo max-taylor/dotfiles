@@ -26,14 +26,32 @@ ln -sf $DOTFILES/zsh/.zshrc $HOME/.zshrc
 
 ln -sf $DOTFILES/aerospace/aerospace.toml $HOME/.aerospace.toml
 
+# Terrible setup process needs improvement
+
 rm -rf $HOME/.config
-mkdir -p $HOME/.config/sketchybar/plugins/
+mkdir -p $HOME/.config/sketchybar/items/
+# mkdir -p $HOME/.config/sketchybar/helper/
+# mkdir -p $HOME/.config/sketchybar/plugins/
 
-ln -sf $DOTFILES/sketchybar/sketchybarrc $HOME/.config/sketchybar/sketchybarrc
+# ln -sf $DOTFILES/sketchybar/sketchybarrc $HOME/.config/sketchybar/sketchybarrc
+# ln -sf $DOTFILES/sketchybar/icons.sh $HOME/.config/sketchybar/icons.sh
+# ln -sf $DOTFILES/sketchybar/colors.sh $HOME/.config/sketchybar/colors.sh
 
-for file in "$DOTFILES/sketchybar/plugins/"*; do
-  ln -snf "$file" "$HOME/.config/sketchybar/plugins/$(basename "$file")"
+# for file in "$DOTFILES/sketchybar/plugins/"*; do
+#   ln -snf "$file" "$HOME/.config/sketchybar/plugins/$(basename "$file")"
+# done
+
+for file in "$DOTFILES/sketchybar/"*; do
+  ln -snf "$file" "$HOME/.config/sketchybar/$(basename "$file")"
 done
+
+for file in "$DOTFILES/sketchybar/items/"*; do
+  ln -snf "$file" "$HOME/.config/sketchybar/items/$(basename "$file")"
+done
+
+# for file in "$DOTFILES/sketchybar/helper/"*; do
+#   ln -snf "$file" "$HOME/.config/sketchybar/helper/$(basename "$file")"
+# done
 
 # Tmux
 # Detect if already installed and skip installing tpm if so
