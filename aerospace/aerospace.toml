@@ -24,13 +24,13 @@ outer.top = [
 outer.left = 15
 outer.right = 15
 
-[workspace-to-monitor-force-assignment]
-	1 = 'terminal'
-	2 = 'web'
-	3 = 'obsidian'
-	4 = 'communication'
-	5 = 'music'
-	6 = 'bot'
+# [workspace-to-monitor-force-assignment]
+# 	1 = 'terminal'
+# 	2 = 'web'
+# 	3 = 'obsidian'
+# 	4 = 'communication'
+# 	5 = 'music'
+# 	6 = 'bot'
 
 [mode.main.binding]
 	alt-t = 'workspace terminal'
