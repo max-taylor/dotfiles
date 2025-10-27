@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(aerospace list-workspaces:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
