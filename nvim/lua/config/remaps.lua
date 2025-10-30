@@ -7,21 +7,6 @@ local function navigate_wrap(direction)
     vim.cmd("wincmd " .. direction)
 end
 
--- Keybinds to make split navigation easier.
---  use ctrl+<hjkl> to switch between windows
--- vim.keymap.set("n", "<C-h>", function()
---     navigate_wrap("h")
--- end, { desc = "Move focus to the left window (wrap)" })
--- vim.keymap.set("n", "<C-l>", function()
---     navigate_wrap("l")
--- end, { desc = "Move focus to the right window (wrap)" })
--- vim.keymap.set("n", "<C-j>", function()
---     navigate_wrap("j")
--- end, { desc = "Move focus to the lower window (wrap)" })
--- vim.keymap.set("n", "<C-k>", function()
---     navigate_wrap("k")
--- end, { desc = "Move focus to the upper window (wrap)" })
-
 -- copilot suggestions
 vim.keymap.set("i", "<C-l>", function()
     if require("copilot.suggestion").is_visible() then
