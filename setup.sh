@@ -61,7 +61,11 @@ for script in "$DOTFILES/bash/"*; do
   chmod +x "$script"
 done
 
-
+# Claude
+mkdir -p $HOME/.claude/commands
+for file in "$DOTFILES/claude/commands/"*; do
+  ln -snf "$file" "$HOME/.claude/commands/$(basename "$file")"
+done
 
 # # MacOS applications
 # if [[ $OSTYPE == "darwin"* ]]; then
