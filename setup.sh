@@ -7,8 +7,6 @@ export DOTFILES="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 ln -sf $DOTFILES/zsh/.zshrc $HOME/.zshrc
 
-ln -sf $DOTFILES/aerospace/aerospace.toml $HOME/.aerospace.toml
-
 # Git
 ln -sf $DOTFILES/git/.gitconfig $HOME/.gitconfig
 
