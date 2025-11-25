@@ -76,8 +76,6 @@ local function get_monitor_workspaces()
     return main_display_id, monitor_workspaces
 end
 
-local main_display_id, monitor_workspaces = get_monitor_workspaces()
-
 -- Helper function to check if workspace is in named list
 local function is_named_workspace(name)
     for _, named in ipairs(named_workspaces) do
@@ -123,31 +121,50 @@ end
 -- Create space items
 local spaces = {}
 
--- For each monitor
-for monitor_id, workspaces in pairs(monitor_workspaces) do
-    if monitor_id == main_display_id then
-        -- Main display: show named workspaces first
-        for _, name in ipairs(named_workspaces) do
-            create_space_item(name, monitor_id, spaces)
-        end
+-- Function to rebuild all workspace items
+local function rebuild_workspaces()
+    -- Remove all existing space items
+    for _, space_name in ipairs(spaces) do
+        sbar.remove(space_name)
+    end
+    spaces = {}
 
-        -- Then show additional workspaces not in named list
-        for _, workspace_name in ipairs(workspaces) do
-            if not is_named_workspace(workspace_name) then
+    -- Get fresh workspace data
+    local main_display_id, monitor_workspaces = get_monitor_workspaces()
+
+    -- Recreate space items
+    for monitor_id, workspaces in pairs(monitor_workspaces) do
+        if monitor_id == main_display_id then
+            -- Main display: show named workspaces first
+            for _, name in ipairs(named_workspaces) do
+                create_space_item(name, monitor_id, spaces)
+            end
+
+            -- Then show additional workspaces not in named list
+            for _, workspace_name in ipairs(workspaces) do
+                if not is_named_workspace(workspace_name) then
+                    create_space_item(workspace_name, monitor_id, spaces)
+                end
+            end
+        else
+            -- Secondary displays: just show available workspaces
+            for _, workspace_name in ipairs(workspaces) do
                 create_space_item(workspace_name, monitor_id, spaces)
             end
         end
-    else
-        -- Secondary displays: just show available workspaces
-        for _, workspace_name in ipairs(workspaces) do
-            create_space_item(workspace_name, monitor_id, spaces)
-        end
     end
+
+    -- Recreate bracket
+    sbar.add("bracket", spaces, {
+        background = { color = colors.bg1, border_color = colors.bg2 },
+    })
 end
 
-sbar.add("bracket", spaces, {
-    background = { color = colors.bg1, border_color = colors.bg2 },
-})
+-- Initial build
+rebuild_workspaces()
+
+-- Subscribe to workspace list changes
+sbar.subscribe("aerospace_workspace_change", rebuild_workspaces)
 
 local space_creator = sbar.add("item", {
     padding_left = 10,
