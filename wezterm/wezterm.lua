@@ -179,6 +179,34 @@ config.keys = {
             end),
         }),
     },
+
+    {
+        key = "k",
+        mods = "CTRL|SHIFT|ALT|SUPER", -- Hyper key
+        action = wezterm.action_callback(function(window, pane)
+            local tab = pane:tab()
+            local panes = tab:panes()
+
+            -- If we have more than one pane, close the extra ones
+            if #panes > 1 then
+                for _, p in ipairs(panes) do
+                    if p:pane_id() ~= pane:pane_id() then
+                        p:send_text("exit\n")
+                    end
+                end
+            else
+                -- Otherwise, split right and run claude code
+                window:perform_action(
+                    wezterm.action.SplitHorizontal({
+                        domain = "CurrentPaneDomain",
+                        -- args = { "/Users/maxtaylor/.claude/local/claude" },
+                    }),
+                    pane
+                )
+            end
+        end),
+    },
+
     {
         key = "p",
         mods = "CTRL",

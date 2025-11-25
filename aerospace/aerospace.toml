@@ -25,12 +25,12 @@ outer.left = 15
 outer.right = 15
 
 [mode.main.binding]
-	alt-t = 'workspace terminal'
-	alt-w = 'workspace web'
-	alt-o = 'workspace obsidian'
-	alt-c = 'workspace communication'
-	alt-m = 'workspace music'
-	alt-b = 'workspace bot'
+	cmd-ctrl-alt-shift-t = 'workspace terminal'
+	cmd-ctrl-alt-shift-w = 'workspace web'
+	cmd-ctrl-alt-shift-o = 'workspace obsidian'
+	cmd-ctrl-alt-shift-c = 'workspace communication'
+	cmd-ctrl-alt-shift-m = 'workspace music'
+	cmd-ctrl-alt-shift-b = 'workspace bot'
  
 	alt-shift-t = 'move-node-to-workspace terminal'
 	alt-shift-w = 'move-node-to-workspace web'
@@ -60,7 +60,7 @@ outer.right = 15
 	alt-equal = 'resize smart +50'
 
 	# See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
-	alt-tab = 'workspace-back-and-forth'
+	cmd-ctrl-alt-shift-tab = 'workspace-back-and-forth'
 	# See: https://nikitabobko.github.io/AeroSpace/commands#move-workspace-to-monitor
 	alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
 
