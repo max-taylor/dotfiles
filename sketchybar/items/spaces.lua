@@ -20,17 +20,19 @@ local space_brackets = {}
 
 -- Mouse click handler for aerospace
 local function mouse_click(env)
-	local workspace_name = env.NAME
+	-- Extract workspace name from item name (remove _mX suffix if present)
+	local workspace_name = env.NAME:match("^(.+)_m%d+$") or env.NAME
 	sbar.exec("aerospace workspace " .. workspace_name)
 end
 
 -- Workspace selection handler for aerospace
 local function space_selection(env)
-	local workspace_name = env.NAME
+	-- Extract workspace name from item name (remove _mX suffix)
+	local workspace_name = env.NAME:match("^(.+)_m%d+$") or env.NAME
 	local selected = env.FOCUSED_WORKSPACE == workspace_name
 
-	local space = spaces[workspace_name]
-	local bracket = space_brackets[workspace_name]
+	local space = spaces[env.NAME]
+	local bracket = space_brackets[env.NAME]
 
 	if space then
 		space:set({
@@ -47,11 +49,104 @@ local function space_selection(env)
 	end
 end
 
--- Create workspace items
-for _, workspace_name in ipairs(named_workspaces) do
-	local icon = space_icons_map[workspace_name] or workspace_name
+-- Function to get monitor workspaces and determine main display
+local function get_monitor_workspaces()
+	local monitor_workspaces = {}
+	local monitor_list = {}
 
-	local space = sbar.add("item", workspace_name, {
+	-- Get all monitors with both aerospace and sketchybar IDs, and their workspaces
+	local handle_monitors =
+		io.popen("aerospace list-monitors --format '%{monitor-id}:%{monitor-appkit-nsscreen-screens-id}'")
+	if not handle_monitors then
+		return nil, {}
+	end
+	local monitors_output = handle_monitors:read("*a")
+	handle_monitors:close()
+
+	for monitor_line in monitors_output:gmatch("[^\r\n]+") do
+		local aerospace_id, sketchybar_id = monitor_line:match("^(%d+):(%d+)")
+		if aerospace_id and sketchybar_id then
+			table.insert(monitor_list, sketchybar_id)
+
+			local handle_ws = io.popen("aerospace list-workspaces --monitor " .. aerospace_id)
+			if handle_ws then
+				local workspaces = handle_ws:read("*a")
+				handle_ws:close()
+
+				monitor_workspaces[sketchybar_id] = {}
+				for workspace in workspaces:gmatch("[^\r\n]+") do
+					workspace = workspace:match("^%s*(.-)%s*$") -- trim
+					table.insert(monitor_workspaces[sketchybar_id], workspace)
+				end
+			end
+		end
+	end
+
+	-- Determine main display: if more than 1 monitor, use the second one; otherwise use the first
+	local main_display_id
+	if #monitor_list > 1 then
+		main_display_id = monitor_list[2]
+	else
+		main_display_id = monitor_list[1]
+	end
+
+	return main_display_id, monitor_workspaces
+end
+
+-- Helper function to check if workspace is in named list
+local function is_named_workspace(name)
+	for _, named in ipairs(named_workspaces) do
+		if named == name then
+			return true
+		end
+	end
+	return false
+end
+
+-- Helper function to update workspace app icons
+local function update_workspace_apps(workspace_name)
+	-- Find all items for this workspace across monitors
+	for item_name, space in pairs(spaces) do
+		local ws_name = item_name:match("^(.+)_m%d+$") or item_name
+		if ws_name == workspace_name then
+			-- Query aerospace for windows in this workspace
+			local handle = io.popen("aerospace list-windows --workspace " .. workspace_name .. " --format '%{app-name}'")
+			if handle then
+				local output = handle:read("*a")
+				handle:close()
+
+				local icon_line = ""
+				local apps_seen = {}
+				local no_app = true
+
+				for app in output:gmatch("[^\r\n]+") do
+					app = app:match("^%s*(.-)%s*$") -- trim
+					if app ~= "" and not apps_seen[app] then
+						apps_seen[app] = true
+						no_app = false
+						local lookup = app_icons[app]
+						local icon = ((lookup == nil) and app_icons["Default"] or lookup)
+						icon_line = icon_line .. icon
+					end
+				end
+
+				if no_app then
+					icon_line = "—"
+				end
+
+				space:set({ label = icon_line })
+			end
+		end
+	end
+end
+
+-- Helper function to create a space item
+local function create_space_item(workspace_name, monitor_id)
+	local icon = space_icons_map[workspace_name] or workspace_name
+	local item_name = workspace_name .. "_m" .. monitor_id
+
+	local space = sbar.add("item", item_name, {
+		display = tonumber(monitor_id),
 		icon = {
 			string = icon,
 			padding_left = 8,
@@ -77,7 +172,7 @@ for _, workspace_name in ipairs(named_workspaces) do
 		},
 	})
 
-	spaces[workspace_name] = space
+	spaces[item_name] = space
 
 	-- Single item bracket for space items to achieve double border on highlight
 	local space_bracket = sbar.add("bracket", { space.name }, {
@@ -89,12 +184,66 @@ for _, workspace_name in ipairs(named_workspaces) do
 		},
 	})
 
-	space_brackets[workspace_name] = space_bracket
+	space_brackets[item_name] = space_bracket
 
 	-- Subscribe to aerospace events
 	space:subscribe("aerospace_workspace_change", space_selection)
 	space:subscribe("mouse.clicked", mouse_click)
+
+	-- Initial app icon update
+	update_workspace_apps(workspace_name)
 end
+
+-- Function to rebuild all workspace items
+local function rebuild_workspaces()
+	-- Remove all existing space items
+	for item_name, _ in pairs(spaces) do
+		sbar.remove(item_name)
+	end
+	spaces = {}
+	space_brackets = {}
+
+	-- Get fresh workspace data
+	local main_display_id, monitor_workspaces = get_monitor_workspaces()
+
+	-- Recreate space items
+	for monitor_id, workspaces in pairs(monitor_workspaces) do
+		if monitor_id == main_display_id then
+			-- Main display: show named workspaces first
+			for _, name in ipairs(named_workspaces) do
+				create_space_item(name, monitor_id)
+			end
+
+			-- Then show additional workspaces not in named list
+			for _, workspace_name in ipairs(workspaces) do
+				if not is_named_workspace(workspace_name) then
+					create_space_item(workspace_name, monitor_id)
+				end
+			end
+		else
+			-- Secondary displays: just show available workspaces
+			for _, workspace_name in ipairs(workspaces) do
+				create_space_item(workspace_name, monitor_id)
+			end
+		end
+	end
+end
+
+-- Initial build
+rebuild_workspaces()
+
+-- Subscribe to workspace changes to rebuild and update app icons
+sbar.subscribe("aerospace_workspace_change", function(env)
+	-- Update app icons for all workspaces
+	local seen_workspaces = {}
+	for item_name, _ in pairs(spaces) do
+		local ws_name = item_name:match("^(.+)_m%d+$") or item_name
+		if not seen_workspaces[ws_name] then
+			seen_workspaces[ws_name] = true
+			update_workspace_apps(ws_name)
+		end
+	end
+end)
 
 -- Window observer for showing apps in each workspace
 local space_window_observer = sbar.add("item", {
