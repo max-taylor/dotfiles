@@ -12,17 +12,30 @@ exec-on-workspace-change = ['/bin/bash', '-c',
     'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE'
 ]
 
+# Start AeroSpace at login
+start-at-login = true
+
+# See: https://nikitabobko.github.io/AeroSpace/guide#layouts
+# The 'accordion-padding' specifies the size of accordion padding
+# You can set 0 to disable the padding feature
+accordion-padding = 30
+
 [gaps]
-inner.horizontal = 15
-inner.vertical = 15
-outer.bottom = 15
-outer.top = [
-  { monitor."built-in" = 20 },
-  { monitor."main" = 50 },
-  50
-]
-outer.left = 15
-outer.right = 15
+  inner.vertical = 15
+  inner.horizontal = 15
+  outer.bottom = 15
+  outer.top = [
+    { monitor."main" = 50 },
+    { monitor."built-in" = 20 },
+    50
+  ]
+  outer.left = 15
+  outer.right = 15
+
+# Claude to workspace bot
+[[on-window-detected]]
+  if.app-name-regex-substring = 'Claude'
+  run = ['move-node-to-workspace bot']
 
 [mode.main.binding]
 	shift-ctrl-alt-t = 'workspace terminal'
@@ -30,7 +43,9 @@ outer.right = 15
 	shift-ctrl-alt-o = 'workspace obsidian'
 	shift-ctrl-alt-c = 'workspace communication'
 	shift-ctrl-alt-m = 'workspace music'
-	shift-ctrl-alt-b = 'workspace bot'
+  shift-ctrl-alt-b = ['exec-and-forget open /Applications/Claude.app', 'workspace bot'] # Claude workspace
+
+	# shift-ctrl-alt-b = 'workspace bot'
  
 	cmd-ctrl-alt-shift-t = 'move-node-to-workspace terminal'
 	cmd-ctrl-alt-shift-w = 'move-node-to-workspace web'
