@@ -246,6 +246,19 @@ sbar.subscribe("aerospace_workspace_change", function(env)
 	end
 end)
 
+-- Subscribe to window changes (triggered by aerospace callbacks)
+sbar.subscribe("aerospace_windows_change", function(env)
+	-- Update app icons for all workspaces
+	local seen_workspaces = {}
+	for item_name, _ in pairs(spaces) do
+		local ws_name = item_name:match("^(.+)_m%d+$") or item_name
+		if not seen_workspaces[ws_name] then
+			seen_workspaces[ws_name] = true
+			update_workspace_apps(ws_name)
+		end
+	end
+end)
+
 -- Window observer for showing apps in each workspace
 local space_window_observer = sbar.add("item", {
 	drawing = false,
