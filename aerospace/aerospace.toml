@@ -32,18 +32,38 @@ accordion-padding = 30
   outer.left = 15
   outer.right = 15
 
-# Claude to workspace bot
+# Auto-move apps to workspaces
+[[on-window-detected]]
+  if.app-name-regex-substring = 'WezTerm'
+  run = ['move-node-to-workspace terminal']
+
+[[on-window-detected]]
+  if.app-name-regex-substring = 'Arc'
+  run = ['move-node-to-workspace web']
+
+[[on-window-detected]]
+  if.app-name-regex-substring = 'Obsidian'
+  run = ['move-node-to-workspace obsidian']
+
+[[on-window-detected]]
+  if.app-name-regex-substring = 'Slack'
+  run = ['move-node-to-workspace communication']
+
+[[on-window-detected]]
+  if.app-name-regex-substring = 'YouTube Music'
+  run = ['move-node-to-workspace music']
+
 [[on-window-detected]]
   if.app-name-regex-substring = 'Claude'
   run = ['move-node-to-workspace bot']
 
 [mode.main.binding]
-	shift-ctrl-alt-t = 'workspace terminal'
-	shift-ctrl-alt-w = 'workspace web'
-	shift-ctrl-alt-o = 'workspace obsidian'
-	shift-ctrl-alt-c = 'workspace communication'
-	shift-ctrl-alt-m = 'workspace music'
-  shift-ctrl-alt-b = ['exec-and-forget open /Applications/Claude.app', 'workspace bot'] # Claude workspace
+	shift-ctrl-alt-t = ['exec-and-forget open /Applications/WezTerm.app', 'workspace terminal']
+	shift-ctrl-alt-w = ['exec-and-forget open /Applications/Arc.app', 'workspace web']
+	shift-ctrl-alt-o = ['exec-and-forget open /Applications/Obsidian.app', 'workspace obsidian']
+	shift-ctrl-alt-c = ['exec-and-forget open /Applications/Slack.app', 'workspace communication']
+	shift-ctrl-alt-m = ['exec-and-forget open ~/Applications/Chrome\ Apps.localized/YouTube\ Music.app', 'workspace music']
+  shift-ctrl-alt-b = ['exec-and-forget open /Applications/Claude.app', 'workspace bot']
 
 	# shift-ctrl-alt-b = 'workspace bot'
  
