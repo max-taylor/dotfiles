@@ -5,12 +5,12 @@ local app_icons = require("helpers.app_icons")
 
 -- Aerospace workspace configuration
 local space_icons_map = {
-	terminal = "T",
-	web = "W",
-	obsidian = "󰏢",
-	communication = "C",
-	music = "M",
-	bot = "B",
+	terminal = "💾",
+	web = "🕸️",
+	obsidian = "🪨",
+	communication = "🤝",
+	music = "🎧",
+	bot = "🤖",
 }
 
 local named_workspaces = { "terminal", "web", "obsidian", "communication", "music", "bot" }
@@ -110,7 +110,8 @@ local function update_workspace_apps(workspace_name)
 		local ws_name = item_name:match("^(.+)_m%d+$") or item_name
 		if ws_name == workspace_name then
 			-- Query aerospace for windows in this workspace
-			local handle = io.popen("aerospace list-windows --workspace " .. workspace_name .. " --format '%{app-name}'")
+			local handle =
+				io.popen("aerospace list-windows --workspace " .. workspace_name .. " --format '%{app-name}'")
 			if handle then
 				local output = handle:read("*a")
 				handle:close()
