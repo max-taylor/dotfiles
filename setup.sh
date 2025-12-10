@@ -22,3 +22,20 @@ done
 # if [[ $OSTYPE == "darwin"* ]]; then
 #   . "$DOTFILES/install/brew-cask.sh"
 # fi
+
+# Claude Code config
+# Symlink from ~/.config/.claude to ~/.claude (where Claude Code expects it)
+CLAUDE_SOURCE="$DOTFILES/.claude"
+CLAUDE_TARGET="$HOME/.claude"
+
+mkdir -p "$CLAUDE_TARGET"
+
+# Symlink claude.md -> CLAUDE.md (Claude expects uppercase)
+ln -sf "$CLAUDE_SOURCE/claude.md" "$CLAUDE_TARGET/CLAUDE.md"
+
+# Symlink commands directory
+ln -snf "$CLAUDE_SOURCE/commands" "$CLAUDE_TARGET/commands"
+
+# Symlink settings files
+ln -sf "$CLAUDE_SOURCE/settings.json" "$CLAUDE_TARGET/settings.json"
+ln -sf "$CLAUDE_SOURCE/settings.local.json" "$CLAUDE_TARGET/settings.local.json"

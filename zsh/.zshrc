@@ -154,3 +154,9 @@ cff() {
 }
 
 alias claude="/Users/maxtaylor/.claude/local/claude"
+
+# Task Master aliases added on 04/12/2025
+alias tm='task-master'
+alias taskmaster='task-master'
+alias hamster='task-master'
+alias ham='task-master'

@@ -85,10 +85,10 @@ start-at-login = true
 	shift-ctrl-alt-comma = 'layout accordion horizontal vertical'
 
 	# See: https://nikitabobko.github.io/AeroSpace/commands#focus
-	ctrl-alt-shift-h = 'focus left'
-	ctrl-alt-shift-j = 'focus down'
-	ctrl-alt-shift-k = 'focus up'
-	ctrl-alt-shift-l = 'focus right'
+	ctrl-alt-shift-h = 'focus --boundaries all-monitors-outer-frame left'
+	ctrl-alt-shift-j = 'focus --boundaries all-monitors-outer-frame down'
+	ctrl-alt-shift-k = 'focus --boundaries all-monitors-outer-frame up'
+	ctrl-alt-shift-l = 'focus --boundaries all-monitors-outer-frame right'
 
 	# See: https://nikitabobko.github.io/AeroSpace/commands#move
 	cmd-ctrl-alt-shift-h = 'move left'
