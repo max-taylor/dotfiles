@@ -1,7 +1,7 @@
 return {
   {
     "Pocco81/auto-save.nvim",
-    enabled = false,
+    enabled = true,
     opts = {
       execution_message = {
         message = function()
@@ -10,7 +10,7 @@ return {
       },
       trigger_events = { "InsertLeave" },
       write_all_buffers = true,
-      debounce_delay = 600,
+      debounce_delay = 200,
     },
   },
 }
