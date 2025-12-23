@@ -3,3 +3,4 @@
 -- Add any additional options here
 
 vim.g.autoformat = false -- Disable format on save
+vim.opt.swapfile = false -- Disable swap files

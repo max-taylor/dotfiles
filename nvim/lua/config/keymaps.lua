@@ -5,10 +5,13 @@
 -- Disable default LazyVim keybindings that conflict
 vim.keymap.del("n", "<leader>wd") -- We're using Ctrl+q instead
 
--- Format + save with Ctrl+s
+-- Format + save with Ctrl+s (async to avoid blocking)
 vim.keymap.set({ "i", "x", "n", "s" }, "<C-s>", function()
-  LazyVim.format({ force = true })
-  vim.cmd("w")
+  require("conform").format({ async = true }, function()
+    vim.schedule(function()
+      vim.cmd("w")
+    end)
+  end)
 end, { desc = "Format and save" })
 
 -- Quit window with Ctrl+q (instead of <leader>wd)

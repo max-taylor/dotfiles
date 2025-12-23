@@ -1,6 +1,7 @@
 return {
   "neovim/nvim-lspconfig",
   opts = {
+    inlay_hints = { enabled = false },
     servers = {
       -- Apply these keymaps to all LSP servers
       ["*"] = {
@@ -8,7 +9,8 @@ return {
           {
             "gv",
             function()
-              require("telescope.builtin").lsp_definitions({ jump_type = "vsplit" })
+              vim.cmd("vsplit")
+              vim.lsp.buf.definition()
             end,
             desc = "Goto Definition (vsplit)",
           },
