@@ -5,7 +5,7 @@ return {
     opts = {
       execution_message = {
         message = function()
-          return "" -- Disable the message
+          return ""
         end,
       },
       trigger_events = { "InsertLeave" },

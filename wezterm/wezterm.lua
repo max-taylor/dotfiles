@@ -33,7 +33,7 @@ config.window_padding = {
 }
 
 -- Slightly transparent and blurred background
-config.window_background_opacity = 0.9
+config.window_background_opacity = 0.85
 config.macos_window_background_blur = 30
 -- Removes the title bar, leaving only the tab bar. Keeps
 -- the ability to resize by dragging the window's edges.
@@ -57,7 +57,6 @@ config.window_frame = {
 local function segments_for_right_status(window)
 	return {
 		window:active_workspace(),
-		wezterm.strftime("%a %b %-d %H:%M"),
 		wezterm.hostname(),
 	}
 end
@@ -219,6 +218,10 @@ config.keys = {
 	-- { key = "l", mods = "CTRL", action = wezterm.action.ActivatePaneDirection("Right") },
 	-- { key = "q", mods = "CTRL", action = wezterm.action.CloseCurrentPane({ confirm = false }) },
 	{ key = "f", mods = "CTRL|CMD", action = wezterm.action.ToggleFullScreen },
+}
+
+config.colors = {
+	split = "#00aaff",
 }
 
 -- Finally, return the configuration to wezterm:
