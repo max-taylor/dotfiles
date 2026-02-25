@@ -50,6 +50,8 @@ config.window_frame = {
 	---@diagnostic disable-next-line: missing-fields
 	font = wezterm.font({ family = "JetBrains Mono", weight = "Bold" }),
 	font_size = 18,
+	active_titlebar_bg = "#0e2236",
+	inactive_titlebar_bg = "#0e2236",
 }
 
 -- Replace the old wezterm.on('update-status', ... function with this:
@@ -207,21 +209,63 @@ config.keys = {
 	},
 
 	{
+		key = "g",
+		mods = "LEADER",
+		action = wezterm.action.SplitPane({
+			direction = "Right",
+			size = { Cells = 80 },
+			command = {
+				args = { "/Users/maxtaylor/Documents/Code/gitscope/gitscope" },
+			},
+		}),
+	},
+	{
+		key = "x",
+		mods = "LEADER",
+		action = wezterm.action.CloseCurrentPane({ confirm = false }),
+	},
+	{
 		key = "p",
 		mods = "CTRL",
 		action = wezterm.action.ActivateCommandPalette,
 	},
 
-	-- { key = "h", mods = "CTRL", action = wezterm.action.ActivatePaneDirection("Left") },
-	-- { key = "j", mods = "CTRL", action = wezterm.action.ActivatePaneDirection("Down") },
-	-- { key = "k", mods = "CTRL", action = wezterm.action.ActivatePaneDirection("Up") },
-	-- { key = "l", mods = "CTRL", action = wezterm.action.ActivatePaneDirection("Right") },
+	-- { key = "h", mods = "CTRL|SHIFT|ALT|SUPER", action = wezterm.action.ActivatePaneDirection("Left") },
+	-- { key = "j", mods = "CTRL|SHIFT|ALT|SUPER", action = wezterm.action.ActivatePaneDirection("Down") },
+	-- { key = "k", mods = "CTRL|SHIFT|ALT|SUPER", action = wezterm.action.ActivatePaneDirection("Up") },
+	-- { key = "l", mods = "CTRL|SHIFT|ALT|SUPER", action = wezterm.action.ActivatePaneDirection("Right") },
+	{ key = "h", mods = "CTRL|SHIFT", action = wezterm.action.ActivatePaneDirection("Left") },
+	{ key = "j", mods = "CTRL|SHIFT", action = wezterm.action.ActivatePaneDirection("Down") },
+	{ key = "k", mods = "CTRL|SHIFT", action = wezterm.action.ActivatePaneDirection("Up") },
+	{ key = "l", mods = "CTRL|SHIFT", action = wezterm.action.ActivatePaneDirection("Right") },
 	-- { key = "q", mods = "CTRL", action = wezterm.action.CloseCurrentPane({ confirm = false }) },
 	{ key = "f", mods = "CTRL|CMD", action = wezterm.action.ToggleFullScreen },
 }
 
 config.colors = {
 	split = "#00aaff",
+	tab_bar = {
+		active_tab = {
+			bg_color = "#2a6090",
+			fg_color = "#e0e8f0",
+		},
+		inactive_tab = {
+			bg_color = "#183050",
+			fg_color = "#7a9aba",
+		},
+		inactive_tab_hover = {
+			bg_color = "#2a5070",
+			fg_color = "#e0e8f0",
+		},
+		new_tab = {
+			bg_color = "#0e2236",
+			fg_color = "#7a9aba",
+		},
+		new_tab_hover = {
+			bg_color = "#2a5070",
+			fg_color = "#e0e8f0",
+		},
+	},
 }
 
 -- Finally, return the configuration to wezterm:
