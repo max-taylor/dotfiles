@@ -1,3 +1,9 @@
+---
+description: Run CI checks locally by analyzing GitHub Actions workflow files. Auto-fixes format, lint, and type issues.
+allowed-tools: Read, Edit, Glob, Grep, Bash
+disable-model-invocation: true
+---
+
 You are tasked with running CI checks locally by analyzing GitHub Actions workflow files.
 
 ## 1. Find Workflow Files
@@ -63,47 +69,47 @@ If linting fails (e.g., `pnpm lint`, `eslint`):
 - First try auto-fix: `pnpm lint:fix` or `eslint --fix`
 - If auto-fix doesn't resolve everything, read the files with remaining errors
 - Fix ONLY obvious issues:
-  - ✅ Unused imports
-  - ✅ Unused variables (if clearly safe to remove)
-  - ✅ Missing semicolons
-  - ✅ Obvious formatting issues
-  - ✅ Simple rule violations (prefer-const, no-console in production, etc.)
-  - ❌ Do NOT change any logic
-  - ❌ Do NOT refactor code structure
-  - ❌ Do NOT modify business logic or function behavior
+  - Unused imports
+  - Unused variables (if clearly safe to remove)
+  - Missing semicolons
+  - Obvious formatting issues
+  - Simple rule violations (prefer-const, no-console in production, etc.)
+  - Do NOT change any logic
+  - Do NOT refactor code structure
+  - Do NOT modify business logic or function behavior
 - Add any non-obvious issues to the issues list
 
 ### Type Check Failures
 If type checking fails (e.g., `pnpm typecheck`, `tsc`):
 - Read files with type errors
 - Fix ONLY obvious issues:
-  - ✅ Missing type imports
-  - ✅ Obvious type annotations (e.g., `const x = 5` clearly should be `const x: number = 5`)
-  - ✅ Simple null/undefined checks where intent is clear
-  - ❌ Do NOT add `any` types
-  - ❌ Do NOT change function signatures that might affect consumers
-  - ❌ Do NOT modify complex type relationships
+  - Missing type imports
+  - Obvious type annotations (e.g., `const x = 5` clearly should be `const x: number = 5`)
+  - Simple null/undefined checks where intent is clear
+  - Do NOT add `any` types
+  - Do NOT change function signatures that might affect consumers
+  - Do NOT modify complex type relationships
 - Add any non-obvious issues to the issues list
 
 ### Test Failures
 If tests fail:
 - Read the test output and failing test files
 - Fix ONLY obvious issues:
-  - ✅ Import errors in tests
-  - ✅ Simple assertion fixes where expected value is clearly wrong in the test (not the implementation)
-  - ❌ Do NOT modify application logic to make tests pass
-  - ❌ Do NOT change test assertions unless they're clearly outdated
-  - ❌ Do NOT disable or skip tests
+  - Import errors in tests
+  - Simple assertion fixes where expected value is clearly wrong in the test (not the implementation)
+  - Do NOT modify application logic to make tests pass
+  - Do NOT change test assertions unless they're clearly outdated
+  - Do NOT disable or skip tests
 - Add any non-obvious test failures to the issues list
 
 ### Build Failures
 If build fails:
 - Read the build errors
 - Fix ONLY obvious issues:
-  - ✅ Missing imports
-  - ✅ Simple syntax errors
-  - ❌ Do NOT restructure code
-  - ❌ Do NOT change build configuration without user approval
+  - Missing imports
+  - Simple syntax errors
+  - Do NOT restructure code
+  - Do NOT change build configuration without user approval
 - Add any non-obvious issues to the issues list
 
 ## 6. Report Results
@@ -113,16 +119,16 @@ After all checks complete and fixes are attempted, provide a summary:
 ```markdown
 ## CI Check Results
 
-### ✅ Passing Checks
+### Passing Checks
 - Format
 - Lint
 - Typecheck
 
-### 🔧 Fixed Issues
+### Fixed Issues
 - **Format**: Auto-fixed 3 files with formatting issues
 - **Lint**: Fixed 2 unused imports in `src/utils/helper.ts`
 
-### ⚠️ Issues Requiring Review
+### Issues Requiring Review
 1. **Type Error** in `src/services/api.ts:45`
    - `Property 'username' does not exist on type 'User'`
    - Needs investigation - unclear if this is a missing field or incorrect usage

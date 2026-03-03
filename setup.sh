@@ -33,8 +33,12 @@ mkdir -p "$CLAUDE_TARGET"
 # Symlink claude.md -> CLAUDE.md (Claude expects uppercase)
 ln -sf "$CLAUDE_SOURCE/claude.md" "$CLAUDE_TARGET/CLAUDE.md"
 
-# Symlink commands directory
-ln -snf "$CLAUDE_SOURCE/commands" "$CLAUDE_TARGET/commands"
+# Symlink each skill individually (directory may have plugin entries)
+mkdir -p "$CLAUDE_TARGET/skills"
+for skill in "$CLAUDE_SOURCE/skills/"*/; do
+  name="$(basename "$skill")"
+  ln -snf "$skill" "$CLAUDE_TARGET/skills/$name"
+done
 
 # Symlink settings files
 ln -sf "$CLAUDE_SOURCE/settings.json" "$CLAUDE_TARGET/settings.json"

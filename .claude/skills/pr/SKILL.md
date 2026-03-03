@@ -1,3 +1,10 @@
+---
+description: Generate a PR description and create or update a pull request on GitHub.
+argument-hint: "[optional: base-branch]"
+allowed-tools: Read, Glob, Grep, Bash
+disable-model-invocation: true
+---
+
 You are tasked with generating a comprehensive pull request description and either creating a new PR or updating an existing one.
 
 **Command accepts an optional parameter**: `/pr [base-branch]`

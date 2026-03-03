@@ -50,8 +50,8 @@ config.window_frame = {
 	---@diagnostic disable-next-line: missing-fields
 	font = wezterm.font({ family = "JetBrains Mono", weight = "Bold" }),
 	font_size = 18,
-	active_titlebar_bg = "#0e2236",
-	inactive_titlebar_bg = "#0e2236",
+	active_titlebar_bg = "rgba(0,0,0,0.15)",
+	inactive_titlebar_bg = "rgba(0,0,0,0.15)",
 }
 
 -- Replace the old wezterm.on('update-status', ... function with this:
@@ -180,34 +180,6 @@ config.keys = {
 			end),
 		}),
 	},
-
-	{
-		key = "k",
-		mods = "CTRL|SHIFT|ALT|SUPER", -- Hyper key
-		action = wezterm.action_callback(function(window, pane)
-			local tab = pane:tab()
-			local panes = tab:panes()
-
-			-- If we have more than one pane, close the extra ones
-			if #panes > 1 then
-				for _, p in ipairs(panes) do
-					if p:pane_id() ~= pane:pane_id() then
-						p:send_text("exit\n")
-					end
-				end
-			else
-				-- Otherwise, split right and run claude code
-				window:perform_action(
-					wezterm.action.SplitHorizontal({
-						domain = "CurrentPaneDomain",
-						-- args = { "/Users/maxtaylor/.claude/local/claude" },
-					}),
-					pane
-				)
-			end
-		end),
-	},
-
 	{
 		key = "g",
 		mods = "LEADER",
@@ -218,6 +190,11 @@ config.keys = {
 				args = { "/Users/maxtaylor/Documents/Code/gitscope/gitscope" },
 			},
 		}),
+	},
+	{
+		key = "n",
+		mods = "LEADER",
+		action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }),
 	},
 	{
 		key = "x",
@@ -258,7 +235,7 @@ config.colors = {
 			fg_color = "#e0e8f0",
 		},
 		new_tab = {
-			bg_color = "#0e2236",
+			bg_color = "none",
 			fg_color = "#7a9aba",
 		},
 		new_tab_hover = {

@@ -1,6 +1,6 @@
 ---
 description: Generate a PRD from a feature description. Asks clarifying questions if needed, then writes docs/prd.md.
-argument-hint: [feature description]
+argument-hint: "[feature description]"
 allowed-tools: Read, Write, Glob, Grep
 disable-model-invocation: true
 ---

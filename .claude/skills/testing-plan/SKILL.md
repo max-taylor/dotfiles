@@ -1,4 +1,9 @@
-You are tasked with generating a concise, execution-ordered unit testing plan for a code file.
+---
+description: Generate a concise, execution-ordered unit testing plan for a code file.
+argument-hint: "<file-path>[#L<line-number>]"
+allowed-tools: Read, Write, Glob, Grep, Bash
+disable-model-invocation: true
+---
 
 **Command accepts a required parameter**: `/testing-plan <file-path>[#L<line-number>]`
 - `file-path`: Path to the file to generate tests for

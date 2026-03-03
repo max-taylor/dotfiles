@@ -33,8 +33,8 @@ start-at-login = true
   outer.top = [
   # { monitor."main" = 50 },
     { monitor."main" = 15 },
-    { monitor."built-in" = 0 },
-    0
+  #    { monitor."built-in" = 15 },
+    15
   ]
   outer.left = 15
   outer.right = 15

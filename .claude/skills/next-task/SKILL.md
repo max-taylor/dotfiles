@@ -159,14 +159,14 @@ If you discovered a **reusable pattern**, also add it to `## Codebase Patterns` 
 
 After completion, report:
 
-- ✅ Task completed: [number] - [title]
+- Task completed: [number] - [title]
 - Files changed: [count]
 - All checks passed: [list what ran]
 - Remaining tasks: [count of incomplete tasks]
 
 Check if ALL tasks across all task files are `[x]`:
 
-- If yes: "🎉 All tasks complete!"
+- If yes: "All tasks complete!"
 - If tasks remain: "Next available task: [number] - [title]"
 
 ## Rules
