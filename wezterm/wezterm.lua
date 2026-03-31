@@ -185,9 +185,9 @@ config.keys = {
 		mods = "LEADER",
 		action = wezterm.action.SplitPane({
 			direction = "Right",
-			size = { Cells = 80 },
+			size = { Cells = 100 },
 			command = {
-				args = { "/Users/maxtaylor/Documents/Code/gitscope/gitscope" },
+				args = { "/Users/maxtaylor/Documents/Code/gitscope/cldiff" },
 			},
 		}),
 	},
@@ -207,14 +207,6 @@ config.keys = {
 		action = wezterm.action.ActivateCommandPalette,
 	},
 
-	-- { key = "h", mods = "CTRL|SHIFT|ALT|SUPER", action = wezterm.action.ActivatePaneDirection("Left") },
-	-- { key = "j", mods = "CTRL|SHIFT|ALT|SUPER", action = wezterm.action.ActivatePaneDirection("Down") },
-	-- { key = "k", mods = "CTRL|SHIFT|ALT|SUPER", action = wezterm.action.ActivatePaneDirection("Up") },
-	-- { key = "l", mods = "CTRL|SHIFT|ALT|SUPER", action = wezterm.action.ActivatePaneDirection("Right") },
-	{ key = "h", mods = "CTRL|SHIFT", action = wezterm.action.ActivatePaneDirection("Left") },
-	{ key = "j", mods = "CTRL|SHIFT", action = wezterm.action.ActivatePaneDirection("Down") },
-	{ key = "k", mods = "CTRL|SHIFT", action = wezterm.action.ActivatePaneDirection("Up") },
-	{ key = "l", mods = "CTRL|SHIFT", action = wezterm.action.ActivatePaneDirection("Right") },
 	-- { key = "q", mods = "CTRL", action = wezterm.action.CloseCurrentPane({ confirm = false }) },
 	{ key = "f", mods = "CTRL|CMD", action = wezterm.action.ToggleFullScreen },
 }
@@ -244,6 +236,20 @@ config.colors = {
 		},
 	},
 }
+
+-- smart-splits.nvim integration: routes CTRL+hjkl to nvim when it's focused,
+-- falls back to WezTerm's ActivatePaneDirection otherwise
+local smart_splits = wezterm.plugin.require("https://github.com/mrjones2014/smart-splits.nvim")
+smart_splits.apply_to_config(config, {
+	direction_keys = {
+		move = { "h", "j", "k", "l" },
+		resize = { "LeftArrow", "DownArrow", "UpArrow", "RightArrow" },
+	},
+	modifiers = {
+		move = "CTRL",
+		resize = "CTRL",
+	},
+})
 
 -- Finally, return the configuration to wezterm:
 return config
