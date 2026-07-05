@@ -39,6 +39,11 @@ start-at-login = true
   outer.left = 15
   outer.right = 15
 
+[[on-window-detected]]
+  if.app-id = 'com.github.wez.wezterm'
+  if.window-title-regex-substring = '^nvim$'
+  run = ['layout floating']
+
 # Auto-move apps to workspaces
 [[on-window-detected]]
   if.app-name-regex-substring = 'WezTerm'
