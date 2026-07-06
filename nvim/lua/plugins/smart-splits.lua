@@ -1,6 +1,10 @@
 return {
 	"mrjones2014/smart-splits.nvim",
 	lazy = false,
+	opts = {
+		multiplexer_integration = "tmux",
+		disable_multiplexer_nav_when_zoomed = true,
+	},
 	keys = {
 		{ "<C-h>", function() require("smart-splits").move_cursor_left() end, mode = "n", desc = "Move to left split/pane" },
 		{ "<C-j>", function() require("smart-splits").move_cursor_down() end, mode = "n", desc = "Move to below split/pane" },

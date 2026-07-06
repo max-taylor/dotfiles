@@ -1,0 +1,43 @@
+background-opacity = 0.85
+background-blur = true
+macos-titlebar-style = hidden
+
+# Every Ghostty window attaches to (or creates) the same tmux session, so
+# tmux windows/panes replace Ghostty's native tabs for multiplexing.
+# Launched via a login shell so the tmux *server* inherits Homebrew's PATH
+# (from ~/.zprofile) - otherwise tmux's own run-shell plugin hooks (tpm,
+# catppuccin, sessionx, resurrect, continuum) can't find `tmux`/`brew` on
+# PATH and silently fail.
+command = /bin/zsh -l -c "exec /opt/homebrew/bin/tmux new-session -A -s main"
+
+# Muscle-memory: cmd+t opens a tmux window instead of a native Ghostty tab,
+# cmd+w closes the current one (& is tmux's default kill-window binding,
+# which prompts y/n - the trailing y auto-confirms).
+# (C-a is the tmux prefix set in tmux.conf).
+keybind = cmd+t=text:\x01c
+keybind = cmd+w=text:\x01&y
+
+# cmd+1..9 jumps to that tmux window number. Native tab-switching binds to
+# the PHYSICAL key layer (digit_1, not the logical "1"), so unbinding the
+# logical key does nothing - it has to be unbound on the physical layer to
+# actually free the combo (github.com/ghostty-org/ghostty discussions/8756).
+# \x01 is C-a, this tmux config's prefix (not the tmux default C-b/\x02).
+keybind = cmd+digit_1=unbind
+keybind = cmd+digit_2=unbind
+keybind = cmd+digit_3=unbind
+keybind = cmd+digit_4=unbind
+keybind = cmd+digit_5=unbind
+keybind = cmd+digit_6=unbind
+keybind = cmd+digit_7=unbind
+keybind = cmd+digit_8=unbind
+keybind = cmd+digit_9=unbind
+
+keybind = cmd+digit_1=text:\x011
+keybind = cmd+digit_2=text:\x012
+keybind = cmd+digit_3=text:\x013
+keybind = cmd+digit_4=text:\x014
+keybind = cmd+digit_5=text:\x015
+keybind = cmd+digit_6=text:\x016
+keybind = cmd+digit_7=text:\x017
+keybind = cmd+digit_8=text:\x018
+keybind = cmd+digit_9=text:\x019

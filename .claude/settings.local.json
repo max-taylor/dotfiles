@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(aerospace list-workspaces:*)"
+      "Bash(aerospace list-workspaces:*)",
+      "WebFetch(domain:github.com)"
     ],
     "deny": [],
     "ask": []

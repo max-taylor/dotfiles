@@ -24,14 +24,8 @@ The setup script creates symlinks for all configurations to their expected locat
 - **LSP Setup**: Uses Mason for LSP server management with lua_ls and ts_ls configured
 - **Key Features**: Telescope for fuzzy finding, conform.nvim for formatting, comprehensive LSP configuration
 
-### Terminal Configuration (WezTerm)
-- **Main Config**: `terminal/wezterm.lua` with modular imports
-- **Workspace Management**: Custom workspace system in `terminal/workspaces.lua`
-- **Key Bindings**:
-  - `Ctrl+n` - Choose workspace
-  - `Leader+c` - Create new workspace
-  - `Leader+r` - Rename workspace
-  - `Ctrl+p` - Command palette
+### Terminal Configuration (Ghostty)
+- **Main Config**: `ghostty/config`
 
 ### Configuration Structure
 - **Git**: `.gitconfig` symlinked from `git/`
@@ -77,12 +71,6 @@ The setup script creates symlinks for all configurations to their expected locat
 - **LSP**: Comprehensive setup with formatting, completion, and diagnostics
 - **Auto-save**: Configured for automatic file saving
 - **Conform**: Code formatting with stylua (Lua) and prettierd (JS/TS)
-
-### WezTerm Features
-- Tokyo Night color scheme with opacity and blur
-- Dynamic status bar with workspace, time, and hostname
-- Custom workspace management system
-- Leader key: `Ctrl+a`
 
 ## File Organization
 - Keep plugin configurations in separate files under `nvim/lua/plugins/`
