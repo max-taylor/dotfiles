@@ -43,3 +43,6 @@ cff() {
 }
 
 export PATH="$HOME/.local/bin:$PATH"
+
+# bun completions
+[ -s "/Users/maxtaylor/.bun/_bun" ] && source "/Users/maxtaylor/.bun/_bun"

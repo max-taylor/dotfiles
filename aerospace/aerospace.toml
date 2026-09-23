@@ -11,17 +11,17 @@ start-at-login = true
 # accordion-padding = 30
 
 [gaps]
-  inner.vertical = 15
-  inner.horizontal = 15
-  outer.bottom = 15
+  inner.vertical = 10
+  inner.horizontal = 10
+  outer.bottom = 10
   outer.top = [
   # { monitor."main" = 50 },
-    { monitor."main" = 15 },
+    { monitor."main" = 5 },
   #    { monitor."built-in" = 15 },
-    15
+    0
   ]
-  outer.left = 15
-  outer.right = 15
+  outer.left = 10
+  outer.right = 10
 
 [[on-window-detected]]
   if.app-id = 'com.mitchellh.ghostty'
@@ -34,16 +34,8 @@ start-at-login = true
   run = ['move-node-to-workspace terminal']
 
 [[on-window-detected]]
-  if.app-name-regex-substring = 'Arc'
-  run = ['move-node-to-workspace web']
-
-[[on-window-detected]]
   if.app-name-regex-substring = 'Obsidian'
   run = ['move-node-to-workspace obsidian']
-
-[[on-window-detected]]
-  if.app-name-regex-substring = 'Slack'
-  run = ['move-node-to-workspace communication']
 
 [[on-window-detected]]
   if.app-name-regex-substring = 'YouTube Music'
@@ -54,43 +46,24 @@ start-at-login = true
   run = ['move-node-to-workspace bot']
 
 [[on-window-detected]]
-  if.app-name-regex-substring = 'Tidelo'
-  run = ['move-node-to-workspace tidelo']
-
-# Assign workspaces to monitors
-# Run 'aerospace list-monitors' to find your external monitor name
-[workspace-to-monitor-force-assignment]
-terminal-secondary = ['secondary', 'main']
-tidelo = ['secondary', 'main']
+  if.app-name-regex-substring = 'DaVinci Resolve'
+  run = ['move-node-to-workspace resolve']
 
 [mode.main.binding]
 	shift-ctrl-alt-t = ['workspace terminal']
 	shift-ctrl-alt-w = ['workspace web']
 	shift-ctrl-alt-o = ['workspace obsidian']
-	shift-ctrl-alt-c = ['workspace communication']
 	shift-ctrl-alt-m = ['workspace music']
 	shift-ctrl-alt-b = ['workspace bot']
-	shift-ctrl-alt-s = ['workspace terminal-secondary']
-	shift-ctrl-alt-a = ['workspace tidelo']
-
-	shift-ctrl-alt-1 = 'workspace 1'
-	shift-ctrl-alt-2 = 'workspace 2'
-	shift-ctrl-alt-3 = 'workspace 3'
-	shift-ctrl-alt-4 = 'workspace 4'
-	shift-ctrl-alt-5 = 'workspace 5'
-	shift-ctrl-alt-6 = 'workspace 6'
-	shift-ctrl-alt-7 = 'workspace 7'
-	shift-ctrl-alt-8 = 'workspace 8'
-	shift-ctrl-alt-9 = 'workspace 9'
+	shift-ctrl-alt-r = ['workspace resolve']
 
 	cmd-ctrl-alt-shift-t = 'move-node-to-workspace terminal'
 	cmd-ctrl-alt-shift-w = 'move-node-to-workspace web'
 	cmd-ctrl-alt-shift-o = 'move-node-to-workspace obsidian'
-	cmd-ctrl-alt-shift-c = 'move-node-to-workspace communication'
 	cmd-ctrl-alt-shift-m = 'move-node-to-workspace music'
 	cmd-ctrl-alt-shift-b = 'move-node-to-workspace bot'
-	cmd-ctrl-alt-shift-s = 'move-node-to-workspace terminal-secondary'
 	cmd-ctrl-alt-shift-a = 'move-node-to-workspace tidelo'
+	cmd-ctrl-alt-shift-r = 'move-node-to-workspace resolve'
 
 	# See: https://nikitabobko.github.io/AeroSpace/commands#layout
 	shift-ctrl-alt-slash = 'layout tiles horizontal vertical'
