@@ -1,36 +1,22 @@
 # Coding Standards
 
-This directory contains modular coding standards organized by topic. Each rule
-file is explicitly imported below so Claude Code reliably loads it (the
-"`rules/` is auto-loaded" claim previously here was aspirational — only
-`@path` imports actually load).
+Rule files in `~/.claude/rules/` (symlinked from `dotfiles/.claude/rules/`) load automatically in every project:
 
-## Rules Overview
+- **engineering.md**: process. Search before writing, reuse and mirror siblings, derive once, `/finish` before reporting done.
+- **react.md**: controller-view-hook pattern, folder structure, state and data flow.
+- **typescript.md**: TypeScript patterns and type conventions.
+- **style.md**: code style and naming.
+- **documentation.md**: keeping READMEs in sync.
 
-- **react.md** - React controller-view-hook pattern, folder structures, state management, and data flow
-- **typescript.md** - TypeScript patterns and type conventions
-- **style.md** - Code style principles and naming conventions
-- **documentation.md** - README maintenance guidelines
-- **thirdweb.md** - Thirdweb SDK / indexer gotchas
-
-@rules/thirdweb.md
-
-## Usage
-
-These rules are automatically loaded when working in this repository. To view or edit:
-
-```bash
-/memory  # View all loaded memory files in Claude Code
-```
-
-To add new rules, create `.md` files in `.claude/rules/`.
-
-For path-specific rules, use YAML frontmatter:
+Add a rule by creating a `.md` file there. Scope it to certain files with frontmatter:
 
 ```markdown
 ---
 paths: "**/*.tsx"
 ---
-
-# React-specific rules here
 ```
+
+## Quality workflow
+
+- `/finish` (skill): checks, `/simplify` and an independent review before a change is reported done. The Stop hook (`hooks/require-finish.sh`) blocks finishing a turn that changed more than 150 lines until `/finish` has stamped the diff.
+- `/harden` (skill): adds jscpd, knip, ESLint size and complexity limits, a test runner, a `check` script and CI to a repo. Run it once per project.
