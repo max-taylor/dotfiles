@@ -1,9 +1,11 @@
 ---
-description: Quality pass before reporting a change done. Runs the project's checks, /simplify and an independent reviewer that hunts for re-implemented code, repeated derivations and unrequested scope; fixes what they find, then stamps the diff. Use after any change touching more than 3 files or adding more than 150 lines.
-allowed-tools: Read, Edit, Write, Glob, Grep, Bash, Agent, Skill
+description: Quality pass before reporting a change done. Runs the project's checks and two fresh-context Sonnet reviewers (reuse and simplification; efficiency and altitude), fixes what they find, then stamps the diff. Use after any change touching more than 3 files or adding more than 150 lines.
+allowed-tools: Read, Edit, Write, Glob, Grep, Bash, Agent
 ---
 
 Run this before reporting work as done. Every step works on the uncommitted change (tracked diff plus untracked files).
+
+Work silently: don't narrate steps or relay the reviewers' reports as they arrive. The only output is the step 7 report.
 
 ## 1. Scope
 
@@ -24,41 +26,42 @@ Find the package manager from the lockfile (`pnpm-lock.yaml` → pnpm, `package-
 
 Fix every failure before continuing. Fix lint warnings in changed files too; a `complexity` or `max-lines-per-function` warning means extract, not suppress.
 
-## 3. Simplify
+## 3. Review
 
-Invoke the `simplify` skill on the change and keep its fixes.
-
-## 4. Independent review
-
-Spawn one `general-purpose` subagent. It starts with fresh context, so it isn't anchored to how the code was written. Give it this prompt, filled in:
+Spawn two `general-purpose` subagents with `model: "sonnet"`, in one message so they run in parallel. They start with fresh context, so they aren't anchored to how the code was written. Give each the shared header plus its own questions, filled in:
 
 > Review an uncommitted change in `<repo path>` for tech debt. Read-only: do not edit anything.
 > Purpose of the change: `<one line>`. Changed files: `<list>`. See the diff with `git diff HEAD` and read the untracked files directly.
->
-> Answer three questions, citing `file:line` for both the new code and the existing code:
->
-> 1. **Re-implemented:** what does the change add that already exists in the repo (helpers, formatters, hooks, types, components, constants)? Grep for it; only report matches you found.
+> Cite `file:line` for both the new code and any existing code you compare it with. Return findings most impactful first, each with a concrete fix, in under 300 words. Say "none" for an empty question. No style nits, no correctness bugs.
+
+**Reviewer A: reuse and simplification**
+
+> 1. **Re-implemented:** what does the change add that already exists in the repo (helpers, formatters, hooks, types, components, constants, contract-mirror maths)? Grep for it; only report matches you found.
 > 2. **Derived twice:** what state or value is computed in more than one place, or recomputed inside a loop, where one pure function could produce it once?
-> 3. **Unrequested scope:** what does the change add beyond its purpose?
+> 3. **Simpler form:** redundant or derivable state, copy-paste with slight variation, dead code, unused exports or fields.
+> 4. **Unrequested scope:** what does the change add beyond its purpose?
 >
 > Also name the closest existing sibling feature and compare it: file sizes, structure, handler style. Report deviations that aren't justified by a real difference in behaviour.
->
-> Return a list of findings, most impactful first, each with a concrete fix. Say "none" for an empty question. No style nits.
 
-## 5. Apply
+**Reviewer B: efficiency and altitude**
+
+> 1. **Wasted work:** redundant computation or I/O, O(n²) lookups in render or loops, duplicate queries or timers, independent async steps run in sequence, unnecessary storage reads/writes or calldata in contracts. Only report real cost at realistic sizes.
+> 2. **Altitude:** is each change made at the right depth? Flag special cases bolted onto shared code, workarounds where changing the underlying mechanism would be simpler, and code at the wrong level (route-local but shared, or shared with one caller, or a contract mirror outside the project's mirror location).
+
+## 4. Apply
 
 - Fix each finding you agree with. For one you reject, give the reason in the report.
-- Scope findings (question 3) are the user's call: list them in the report instead of deleting code.
+- Scope findings (reviewer A, question 4) are the user's call: list them in the report instead of deleting code.
 - If you changed anything, rerun step 2.
 
-## 6. Learn
+## 5. Learn
 
 If a finding repeats a mistake that a lint rule could catch, or one already covered by `~/.claude/rules/engineering.md`, propose (don't apply) one of:
 
 - a lint rule in the project's shared config, or
 - a line in the project `CLAUDE.md` or `~/.claude/rules/engineering.md`.
 
-## 7. Stamp
+## 6. Stamp
 
 ```bash
 ~/dotfiles/.claude/hooks/diff-hash.sh > "$(git rev-parse --absolute-git-dir)/finish-stamp"
@@ -66,6 +69,6 @@ If a finding repeats a mistake that a lint rule could catch, or one already cove
 
 This tells the Stop hook that `/finish` passed on exactly this diff. Write it only when every step above passed. Any later edit changes the hash and requires another `/finish`.
 
-## 8. Report
+## 7. Report
 
-Use the normal completion format. Under SURPRISES, list findings that were fixed (one line each). Under CALLS, list rejected findings with the reason, scope findings left for the user, and any proposed lint or rule additions.
+Use the normal completion format and keep it short: one line per item, grouped, no per-reviewer breakdown. Under SURPRISES, list findings that were fixed. Under CALLS, list rejected findings with the reason, scope findings left for the user, and any proposed lint or rule additions.

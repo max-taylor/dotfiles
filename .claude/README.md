@@ -39,8 +39,11 @@ It proposes the changes first and applies them only after approval. Existing vio
 **3. Review: `/finish`, before a large change is reported done.** It runs:
 
 - the project's checks
-- the built-in `/simplify`
-- a fresh-context reviewer subagent, which looks for re-implemented code, repeated derivations, unrequested scope and drift from the closest sibling feature
+- two fresh-context reviewer subagents on Sonnet, in parallel:
+  - reuse and simplification: re-implemented code, repeated derivations, dead code, unrequested scope, drift from the closest sibling feature
+  - efficiency and altitude: wasted work (renders, queries, gas) and fixes made at the wrong depth
+
+They replace the built-in `/simplify`, which runs four agents on the session model (Opus) and costs about three times as much.
 
 It fixes what they find, proposes lint or rule additions for recurring issues, then stamps the diff.
 

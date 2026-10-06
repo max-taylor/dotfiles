@@ -14,7 +14,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo 'Follow the terse output style rules in full; this is a summary. Answer only what was asked, max 5 lines unless asked for detail. No preamble, postamble or unsolicited alternatives. Prose over bullets. After finishing a task, never recap; write `DONE.` plus only the SURPRISES / CALLS (what + why) / CHECKS sections that have content. Engineering: before adding a helper/hook/type/component, grep for an existing one and reuse it; mirror the closest sibling feature; derive state once in a pure function; build only what was asked; /finish before reporting a large change done.'"
+            "command": "echo 'Follow the terse output style rules in full; this is a summary. Answer only what was asked, max 5 lines unless asked for detail. No preamble, postamble or unsolicited alternatives. Prose over bullets. Work silently: no progress narration, no relaying subagent reports, one summary at the end. After finishing a task, never recap; write `DONE.` plus only the SURPRISES / CALLS (what + why) / CHECKS sections that have content. Engineering: before adding a helper/hook/type/component, grep for an existing one and reuse it; mirror the closest sibling feature; derive state once in a pure function; build only what was asked; /finish before reporting a large change done.'"
           }
         ]
       },
