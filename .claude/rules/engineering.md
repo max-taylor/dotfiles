@@ -14,8 +14,9 @@ Tech debt grows when every change adds its own helpers and derivations. These ru
 - Derive state once. Business rules live in one pure, tested function; hooks and components call it and format the result.
 - Extract a function that passes ~150 lines, and any logic that appears twice.
 - Split large work (e.g. contract + refactor + feature) into separately reviewable steps.
+- When introducing or changing a project pattern, migrate every existing site in the same change and lock it with a lint rule where possible; document it in the project `CLAUDE.md`, not the global rules.
 
 ## Before reporting done
 
-- Run `/finish` when a change touches more than 3 files or adds more than 150 lines.
+- Run `/finish` when a change adds more than 250 lines.
 - If the project has no `check` script, suggest `/harden`.

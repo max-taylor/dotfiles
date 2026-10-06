@@ -2,8 +2,8 @@
 # Keeps large changes from being reported done before /finish has passed on them.
 #
 #   require-finish.sh start   UserPromptSubmit: records the diff hash at the start of the turn.
-#   require-finish.sh stop    Stop: blocks the end of the turn if this turn changed code, the uncommitted change is
-#                             large, and /finish hasn't stamped the current diff.
+#   require-finish.sh stop    Stop: blocks the end of the turn if this turn changed code and the uncommitted change has
+#                             grown by more than THRESHOLD lines since /finish last passed (or since HEAD).
 #
 # Only turns that edit code are checked, so Q&A over an already-large diff isn't blocked.
 # State lives in the repo's git dir (never committed): finish-stamp (written by /finish) and one turn-start file per
@@ -11,10 +11,8 @@
 set -uo pipefail
 
 MODE=${1:-stop}
-THRESHOLD=${FINISH_LINE_THRESHOLD:-150}
+THRESHOLD=250
 HOOKS_DIR="$(cd "$(dirname "$0")" && pwd)"
-# Lockfiles and generated code inflate the count without being reviewable.
-EXCLUDES=(':!*.lock' ':!pnpm-lock.yaml' ':!package-lock.json' ':!**/generated.ts' ':!**/generated/**')
 
 input=$(cat)
 field() { jq -r ".$1 // empty" <<<"$input"; }
@@ -36,15 +34,17 @@ fi
 [ -f "$turn_start" ] || exit 0
 # Nothing changed this turn.
 [ "$(cat "$turn_start")" = "$current" ] && exit 0
-# /finish already passed on exactly this diff.
-[ -f "$git_dir/finish-stamp" ] && [ "$(cat "$git_dir/finish-stamp")" = "$current" ] && exit 0
 
-tracked=$(git diff HEAD --numstat -- . "${EXCLUDES[@]}" 2>/dev/null | awk '{ s += $1 } END { print s + 0 }')
-untracked=$(git ls-files --others --exclude-standard -z -- . "${EXCLUDES[@]}" | xargs -0 cat 2>/dev/null | wc -l | tr -d ' ')
-added=$((tracked + untracked))
+# Measure growth since /finish last passed, unless a commit has happened since (then the stamp is stale).
+stamp_hash="" stamp_lines=0 stamp_head=""
+[ -f "$git_dir/finish-stamp" ] && read -r stamp_hash stamp_lines stamp_head <"$git_dir/finish-stamp"
+[ "$stamp_hash" = "$current" ] && exit 0
+[ "$stamp_head" = "$(git rev-parse HEAD 2>/dev/null)" ] || stamp_lines=0
+
+added=$(( $("$HOOKS_DIR/diff-lines.sh") - ${stamp_lines:-0} ))
 [ "$added" -le "$THRESHOLD" ] && exit 0
 
 jq -n --arg added "$added" '{
   decision: "block",
-  reason: ("This change adds \($added) lines and /finish has not passed on it. Run /finish, fix what it finds, then report.")
+  reason: ("This change adds \($added) lines that /finish has not passed on. Run /finish, fix what it finds, then report.")
 }'

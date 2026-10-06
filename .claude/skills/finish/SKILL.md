@@ -1,5 +1,5 @@
 ---
-description: Quality pass before reporting a change done. Runs the project's checks and two fresh-context Sonnet reviewers (reuse and simplification; efficiency and altitude), fixes what they find, then stamps the diff. Use after any change touching more than 3 files or adding more than 150 lines.
+description: Quality pass before reporting a change done. Runs the project's checks and two fresh-context Sonnet reviewers (reuse and simplification; efficiency and altitude), fixes what they find, then stamps the diff. Use after any change adding more than 250 lines.
 allowed-tools: Read, Edit, Write, Glob, Grep, Bash, Agent
 ---
 
@@ -64,10 +64,10 @@ If a finding repeats a mistake that a lint rule could catch, or one already cove
 ## 6. Stamp
 
 ```bash
-~/dotfiles/.claude/hooks/diff-hash.sh > "$(git rev-parse --absolute-git-dir)/finish-stamp"
+~/dotfiles/.claude/hooks/stamp-finish.sh
 ```
 
-This tells the Stop hook that `/finish` passed on exactly this diff. Write it only when every step above passed. Any later edit changes the hash and requires another `/finish`.
+This tells the Stop hook that `/finish` passed on exactly this diff. Write it only when every step above passed. The hook only blocks again once the work grows by more than 250 lines past this pass, or after a commit.
 
 ## 7. Report
 

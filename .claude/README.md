@@ -13,7 +13,7 @@ Global Claude Code setup, shared by every project. `setup.sh` links it into `~/.
 
 ## Rules
 
-- `engineering.md`: process. Search before writing, reuse, mirror the closest sibling feature, derive state once, build only what was asked, `/finish` before done.
+- `engineering.md`: process. Search before writing, reuse, mirror the closest sibling feature, derive state once, build only what was asked, migrate every site when introducing a pattern, `/finish` before done.
 - `react.md`: controller-view-hook pattern and folder structure.
 - `typescript.md`: type conventions, no `any`.
 - `style.md`: naming and simplicity.
@@ -54,10 +54,9 @@ It fixes what they find, proposes lint or rule additions for recurring issues, t
 - `start` (`UserPromptSubmit`): records a hash of the uncommitted work (`hooks/diff-hash.sh`).
 - `stop` (`Stop`): blocks the end of the turn when all of these are true:
   - the turn changed code (the hash moved), and
-  - the change adds more than 150 lines, not counting lockfiles and generated files (override with `FINISH_LINE_THRESHOLD`), and
-  - `/finish` hasn't stamped the current diff.
+  - the change has grown by more than 250 lines since `/finish` last passed (or since HEAD, if it hasn't passed or there's been a commit since). Lines are counted by `hooks/diff-lines.sh`, which skips lockfiles, generated code, Markdown, JSON and snapshots.
 
-Blocking makes Claude carry on and run `/finish`. Any edit after the stamp changes the hash, so it needs another `/finish`.
+Blocking makes Claude carry on and run `/finish`, which stamps the diff hash, line count and HEAD (`hooks/stamp-finish.sh`). Small edits after a pass don't trigger another one.
 
 The state files live in the repo's git dir, so nothing needs gitignoring: `finish-stamp`, plus one `finish-turn-start-<session>` per session, so concurrent sessions don't clash. The hook allows the stop rather than guessing when it can't tell: outside git, with no turn-start record, or when the turn was already blocked once (no loops).
 
