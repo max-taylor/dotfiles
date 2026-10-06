@@ -6,5 +6,18 @@
     ],
     "deny": [],
     "ask": []
+  },
+  "outputStyle": "terse",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Follow the terse output style rules in full; this is a summary. Answer only what was asked, max 5 lines unless asked for detail. No preamble, postamble or unsolicited alternatives. Prose over bullets. After finishing a task, never recap; write `DONE.` plus only the SURPRISES / CALLS (what + why) / CHECKS sections that have content.'"
+          }
+        ]
+      }
+    ]
   }
 }

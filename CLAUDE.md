@@ -33,6 +33,12 @@ The setup script creates symlinks for all configurations to their expected locat
 - **Tmux**: `.tmux.conf` symlinked from `tmux/` with TPM plugin manager
 - **Keyboard**: Corne keyboard layout in `keyboard/corne.vil`
 
+### Claude Code Configuration
+- `.claude/` is symlinked into `~/.claude/` by `setup.sh` (`claude.md`, `rules/`, `output-styles/`, `settings.local.json`, `skills/*`)
+- **Communication rules live in `.claude/output-styles/terse.md`**, not `claude.md`. They are loaded once into the system prompt.
+- **Intentional redundancy**: the `UserPromptSubmit` hook in `.claude/settings.local.json` echoes a condensed summary of `terse.md` on every prompt, because rules loaded once drift out of focus in long sessions. The hook's text points back to the full style, so it reinforces the style rather than replacing it.
+- **When editing `terse.md`, update the hook summary to match.**
+
 ## Development Commands
 
 ### Setup and Installation

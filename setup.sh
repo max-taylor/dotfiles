@@ -50,6 +50,7 @@ mkdir -p "$CLAUDE_TARGET"
 # claude.md -> CLAUDE.md (Claude expects uppercase)
 link "$DOTFILES/.claude/claude.md" "$CLAUDE_TARGET/CLAUDE.md"
 link "$DOTFILES/.claude/rules" "$CLAUDE_TARGET/rules"
+link "$DOTFILES/.claude/output-styles" "$CLAUDE_TARGET/output-styles"
 link "$DOTFILES/.claude/settings.local.json" "$CLAUDE_TARGET/settings.local.json"
 
 mkdir -p "$CLAUDE_TARGET/skills"
